@@ -6,6 +6,61 @@ using System.Threading.Tasks;
 
 namespace Odin
 {
+    public class TokenDictionary
+    {
+        public Dictionary<string, TokenType> Keywords;
+        public TokenDictionary() {
+            Keywords = new Dictionary<string, TokenType>();
+            Keywords["Action"] = TokenType.ACTION;
+            Keywords["Board"] = TokenType.BOARD;
+            Keywords["Deck"] = TokenType.DECK;
+            Keywords["DeckOfPlayer"] = TokenType.DECK_OF_PLAYER;
+            Keywords["Faction"] = TokenType.FACTION;
+            Keywords["Field"] = TokenType.FIELD;
+            Keywords["FieldOfPlayer"] = TokenType.FIELD_OF_PLAYER;
+            Keywords["Find"] = TokenType.FIND;
+            Keywords["Graveyard"] = TokenType.GRAVEYARD;
+            Keywords["GraveyardOfPlayer"] = TokenType.GRAVEYARD_OF_PLAYER;
+            Keywords["Hand"] = TokenType.HAND;
+            Keywords["HandOfPlayer"] = TokenType.HAND_OF_PLAYER;
+            Keywords["Melee"] = TokenType.MELEE;
+            Keywords["Name"] = TokenType.NAME;
+            Keywords["OnActivation"] = TokenType.ON_ACTIVATION;
+            Keywords["Owner"] = TokenType.OWNER;
+            Keywords["Params"] = TokenType.PARAMS;
+            Keywords["Pop"] = TokenType.POP;
+            Keywords["PostAction"] = TokenType.POST_ACTION;
+            Keywords["Power"] = TokenType.POWER;
+            Keywords["Predicate"] = TokenType.PREDICATE;
+            Keywords["Push"] = TokenType.PUSH;
+            Keywords["Range"] = TokenType.RANGE;
+            Keywords["Ranged"] = TokenType.RANGED;
+            Keywords["Remove"] = TokenType.REMOVE;
+            Keywords["Selector"] = TokenType.SELECTOR;
+            Keywords["SendBottom"] = TokenType.SEND_BOTTOM;
+            Keywords["Shuffle"] = TokenType.SHUFFLE;
+            Keywords["Siege"] = TokenType.SIEGE;
+            Keywords["Single"] = TokenType.SINGLE;
+            Keywords["Source"] = TokenType.SOURCE;
+            Keywords["TriggerPlayer"] = TokenType.TRIGGER_PLAYER;
+            Keywords["Type"] = TokenType.TYPE;
+            Keywords["card"] = TokenType.CLASS_CARD;
+            Keywords["deck"] = TokenType.S_DECK;
+            Keywords["effect"] = TokenType.CLASS_EFFECT;
+            Keywords["false"] = TokenType.FALSE;
+            Keywords["field"] = TokenType.S_FIELD;
+            Keywords["for"] = TokenType.FOR;
+            Keywords["hand"] = TokenType.S_HAND;
+            Keywords["in"] = TokenType.IN;
+            Keywords["otherDeck"] = TokenType.S_OTHER_DECK;
+            Keywords["otherField"] = TokenType.S_OTHER_FIELD;
+            Keywords["otherHand"] = TokenType.S_OTHER_HAND;
+            Keywords["parent"] = TokenType.S_PARENT;
+            Keywords["true"] = TokenType.TRUE;
+            Keywords["while"] = TokenType.WHILE;
+        }
+    }
+
     public enum TokenType
     {
         #region Single-character tokens
@@ -68,9 +123,6 @@ namespace Odin
         NAME, // Name
         PARAMS, // Params
         ACTION, // Action
-        TARGETS, // targets
-        TARGET, // target
-        CONTEXT, // context
         TRIGGER_PLAYER, // TriggerPlayer
         BOARD, // Board
         HAND_OF_PLAYER, // HandOfPlayer
@@ -97,7 +149,6 @@ namespace Odin
         SOURCE, // Source
         SINGLE, // Single
         PREDICATE, // Predicate
-        UNIT, // unit
         POST_ACTION, // PostAction
 
         TRUE, // true

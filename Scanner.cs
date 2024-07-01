@@ -18,11 +18,15 @@ namespace Odin
         private int current = 0;
         private int line = 1;
         private int lineBeginning = 0;
-        //private int column = 1;
+        private Dictionary<string, TokenType> Keywords;
+        private TokenDictionary _tokenDictionary;
 
         public Scanner(string source)
         {
             _source = source;
+            _tokenDictionary = new TokenDictionary();
+            Keywords = new Dictionary<string, TokenType>();
+            Keywords = _tokenDictionary.Keywords;
         }
         private string ErrorLine()
         {
@@ -33,7 +37,7 @@ namespace Odin
 
         private void ThrowError(string message)
         {
-            ErrorReporter.Error(line, current - lineBeginning - 1, ErrorLine() , message);
+            ErrorReporter.Error(line, current - lineBeginning - 1, ErrorLine(), message);
         }
 
         private bool IsAtEnd()
@@ -85,8 +89,45 @@ namespace Odin
                 return;
             }
             Advance();
-            string value = _source.Substring(start + 1, current - start - 2);
-            AddToken(TokenType.STRING, value);
+            AddToken(TokenType.STRING, _source.Substring(start + 1, current - start - 2));
+        }
+
+        private bool IsDigit(char c)
+        {
+            return '0' <= c && c <= '9';
+        }
+
+        private void Number()
+        {
+            while (IsDigit(Peek())) Advance();
+            string number = _source.Substring(start, current - start);
+            if (number.Length > 10)
+            {
+                ThrowError("Integer Overflow.");
+                return;
+            }
+            long value = long.Parse(number);
+            if (value > int.MaxValue) ThrowError("Integer Overflow.");
+            else AddToken(TokenType.NUMBER, value);
+        }
+
+        private bool IsAlpha(char c)
+        {
+            return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || c == '_';
+        }
+
+        private bool IsAlphaNumeric(char c)
+        {
+            return IsAlpha(c) || IsDigit(c);
+        }
+
+        private void Identifier()
+        {
+            while (IsAlphaNumeric(Peek())) Advance();
+            string text = _source.Substring(start, current - start);
+            TokenType type = TokenType.IDENTIFIER;
+            if (Keywords.ContainsKey(text)) type = Keywords[text];
+            AddToken(type);
         }
 
         private void ScanToken()
@@ -108,30 +149,37 @@ namespace Odin
                 case '.': AddToken(TokenType.DOT); break;
                 case ';': AddToken(TokenType.SEMICOLON); break;
                 case ':': AddToken(TokenType.COLON); break;
-                case '-': AddToken(Match('-') ? TokenType.MINUS_MINUS : Match('=') ? TokenType.MINUS_EQUAL : TokenType.MINUS); break;
-                case '+': AddToken(Match('+') ? TokenType.PLUS_PLUS : Match('=') ? TokenType.PLUS_EQUAL : TokenType.PLUS); break;
-                case '=': AddToken(Match('=') ? TokenType.EQUAL_EQUAL : Match('>') ? TokenType.LAMBDA : TokenType.EQUAL); break;
-                case '<': AddToken(Match('=') ? TokenType.LESS_EQUAL : TokenType.LESS); break;
-                case '>': AddToken(Match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER); break;
-                case '*': AddToken(Match('=') ? TokenType.STAR_EQUAL : TokenType.STAR); break;
-                case '^': AddToken(Match('=') ? TokenType.EXP_EQUAL : TokenType.EXP); break;
-                case '@': AddToken(Match('@') ? TokenType.AT_AT : TokenType.AT); break;
+                case '-': AddToken(Match('-') ? TokenType.MINUS_MINUS : Match('=') ? TokenType.MINUS_EQUAL : TokenType.MINUS); break; // -- -= -
+                case '+': AddToken(Match('+') ? TokenType.PLUS_PLUS : Match('=') ? TokenType.PLUS_EQUAL : TokenType.PLUS); break; // ++ += +
+                case '=': AddToken(Match('=') ? TokenType.EQUAL_EQUAL : Match('>') ? TokenType.LAMBDA : TokenType.EQUAL); break; // == => =
+                case '<': AddToken(Match('=') ? TokenType.LESS_EQUAL : TokenType.LESS); break; // <= <
+                case '>': AddToken(Match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER); break; // >= >
+                case '*': AddToken(Match('=') ? TokenType.STAR_EQUAL : TokenType.STAR); break; // *= *
+                case '^': AddToken(Match('=') ? TokenType.EXP_EQUAL : TokenType.EXP); break; // ^= ^
+                case '@': AddToken(Match('@') ? TokenType.AT_AT : TokenType.AT); break; // @@ @
+                case '&':
+                    if (Match('&')) AddToken(TokenType.AND_AND);
+                    else ThrowError("Unexpected character.");
+                    break;
+                case '|':
+                    if (Match('|')) AddToken(TokenType.OR_OR);
+                    else ThrowError("Unexpected character.");
+                    break;
                 case '/':
-                    if (Match('/'))
+                    if (Match('/')) // Comments
                     {
-                        while (Peek() != '\n' && !IsAtEnd())
-                        {
-                            Advance();
-                        }
+                        while (Peek() != '\n' && !IsAtEnd()) Advance();
                     }
-                    else
+                    else // /=
                     {
-                        AddToken(Match('=') ? TokenType.SLASH_EQUAL : TokenType.SLASH); break;
+                        AddToken(Match('=') ? TokenType.SLASH_EQUAL : TokenType.SLASH);
                     }
                     break;
                 case '\"': String(); break;
                 default:
-                    ThrowError("Unexpected character.");
+                    if (IsDigit(c)) Number();
+                    else if (IsAlpha(c)) Identifier();
+                    else ThrowError("Unexpected character.");
                     break;
             }
         }
