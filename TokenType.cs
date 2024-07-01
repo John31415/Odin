@@ -44,6 +44,11 @@ namespace Odin
         OR_OR, // ||
         AT_AT, // @@
         LAMBDA, // =>
+        STAR_EQUAL, // *=
+        PLUS_EQUAL, // +=
+        MINUS_EQUAL, // -=
+        SLASH_EQUAL, // /=
+        EXP_EQUAL, // ^=
 
         #endregion
 
