@@ -19,13 +19,11 @@ namespace Odin
         private int line = 1;
         private int lineBeginning = 0;
         private Dictionary<string, TokenType> Keywords;
-        private TokenDictionary _tokenDictionary;
 
         public Scanner(string source)
         {
             _source = source;
-            _tokenDictionary = new TokenDictionary();
-            Keywords = new Dictionary<string, TokenType>();
+            TokenDictionary _tokenDictionary = new TokenDictionary();
             Keywords = _tokenDictionary.Keywords;
         }
         private string ErrorLine()
@@ -55,7 +53,7 @@ namespace Odin
 
         private void AddToken(TokenType type)
         {
-            AddToken(type, null);
+            AddToken(type, null!);
         }
         private void AddToken(TokenType type, object literal)
         {
@@ -191,7 +189,7 @@ namespace Odin
                 start = current;
                 ScanToken();
             }
-            _tokens.Add(new Token(TokenType.EOF, "", null, line, 1));
+            _tokens.Add(new Token(TokenType.EOF, "", null!, line, 1));
             return _tokens;
         }
     }
