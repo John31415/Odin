@@ -100,25 +100,15 @@ namespace Odin
         UNIT, // unit
         POST_ACTION, // PostAction
 
-        #region Syntaxis
-
         TRUE, // true
         FALSE, // false
         FOR, // for
         IN, // in
         WHILE, // while
 
-        #endregion
-
-        #region Range
-
         MELEE, // Melee
         RANGED, // Ranged
         SIEGE, // Siege
-
-        #endregion
-
-        #region Source
 
         S_HAND, // hand
         S_OTHER_HAND, // otherHand
@@ -127,8 +117,6 @@ namespace Odin
         S_FIELD, // field
         S_OTHER_FIELD, // otherField
         S_PARENT, // parent
-
-        #endregion
 
         #endregion
 

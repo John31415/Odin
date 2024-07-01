@@ -24,6 +24,17 @@ namespace Odin
         {
             _source = source;
         }
+        private string ErrorLine()
+        {
+            int iter = current - 1;
+            for (int i = 0; i < 100 && iter < _source.Length - 1 && _source[iter] != '\n'; i++) iter++;
+            return _source.Substring(lineBeginning, iter - lineBeginning + 1);
+        }
+
+        private void ThrowError(string message)
+        {
+            ErrorReporter.Error(line, current - lineBeginning - 1, ErrorLine() , message);
+        }
 
         private bool IsAtEnd()
         {
@@ -52,10 +63,30 @@ namespace Odin
             return _source[current++];
         }
 
-        private char peek()
+        private char Peek()
         {
             if (IsAtEnd()) return '\0';
             return _source[current];
+        }
+        private void String()
+        {
+            while (Peek() != '\"' && !IsAtEnd())
+            {
+                if (Peek() == '\n')
+                {
+                    line++;
+                    lineBeginning = current;
+                }
+                Advance();
+            }
+            if (IsAtEnd())
+            {
+                ThrowError("Unterminated string.");
+                return;
+            }
+            Advance();
+            string value = _source.Substring(start + 1, current - start - 2);
+            AddToken(TokenType.STRING, value);
         }
 
         private void ScanToken()
@@ -77,7 +108,6 @@ namespace Odin
                 case '.': AddToken(TokenType.DOT); break;
                 case ';': AddToken(TokenType.SEMICOLON); break;
                 case ':': AddToken(TokenType.COLON); break;
-                case '\"': AddToken(TokenType.QUOT); break;
                 case '-': AddToken(Match('-') ? TokenType.MINUS_MINUS : Match('=') ? TokenType.MINUS_EQUAL : TokenType.MINUS); break;
                 case '+': AddToken(Match('+') ? TokenType.PLUS_PLUS : Match('=') ? TokenType.PLUS_EQUAL : TokenType.PLUS); break;
                 case '=': AddToken(Match('=') ? TokenType.EQUAL_EQUAL : Match('>') ? TokenType.LAMBDA : TokenType.EQUAL); break;
@@ -89,7 +119,7 @@ namespace Odin
                 case '/':
                     if (Match('/'))
                     {
-                        while (peek() != '\n' && !IsAtEnd())
+                        while (Peek() != '\n' && !IsAtEnd())
                         {
                             Advance();
                         }
@@ -99,10 +129,9 @@ namespace Odin
                         AddToken(Match('=') ? TokenType.SLASH_EQUAL : TokenType.SLASH); break;
                     }
                     break;
+                case '\"': String(); break;
                 default:
-                    int iter = current - 1;
-                    for (int i = 0; i < 100 && iter < _source.Length - 1 && _source[iter] != '\n'; i++) iter++;
-                    ErrorReporter.Error(line, current - lineBeginning - 1, _source.Substring(lineBeginning, iter - lineBeginning + 1), "Unexpected character.");
+                    ThrowError("Unexpected character.");
                     break;
             }
         }
