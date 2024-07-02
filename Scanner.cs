@@ -26,6 +26,7 @@ namespace Odin
             TokenDictionary _tokenDictionary = new TokenDictionary();
             Keywords = _tokenDictionary.Keywords;
         }
+
         private string ErrorLine()
         {
             int iter = current - 1;
@@ -70,6 +71,7 @@ namespace Odin
             if (IsAtEnd()) return '\0';
             return _source[current];
         }
+
         private void String()
         {
             while (Peek() != '\"' && !IsAtEnd())
@@ -89,7 +91,7 @@ namespace Odin
             Advance();
             AddToken(TokenType.STRING, _source.Substring(start + 1, current - start - 2));
         }
-
+        
         private bool IsDigit(char c)
         {
             return '0' <= c && c <= '9';

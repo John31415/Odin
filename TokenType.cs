@@ -24,7 +24,6 @@ namespace Odin
             Keywords["GraveyardOfPlayer"] = TokenType.GRAVEYARD_OF_PLAYER;
             Keywords["Hand"] = TokenType.HAND;
             Keywords["HandOfPlayer"] = TokenType.HAND_OF_PLAYER;
-            Keywords["Melee"] = TokenType.MELEE;
             Keywords["Name"] = TokenType.NAME;
             Keywords["Number"] = TokenType.NUMBER;
             Keywords["OnActivation"] = TokenType.ON_ACTIVATION;
@@ -36,12 +35,10 @@ namespace Odin
             Keywords["Predicate"] = TokenType.PREDICATE;
             Keywords["Push"] = TokenType.PUSH;
             Keywords["Range"] = TokenType.RANGE;
-            Keywords["Ranged"] = TokenType.RANGED;
             Keywords["Remove"] = TokenType.REMOVE;
             Keywords["Selector"] = TokenType.SELECTOR;
             Keywords["SendBottom"] = TokenType.SEND_BOTTOM;
             Keywords["Shuffle"] = TokenType.SHUFFLE;
-            Keywords["Siege"] = TokenType.SIEGE;
             Keywords["Single"] = TokenType.SINGLE;
             Keywords["Source"] = TokenType.SOURCE;
             Keywords["String"] = TokenType.STRING;
