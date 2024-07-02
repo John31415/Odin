@@ -152,19 +152,16 @@ namespace Odin
                 case '-': AddToken(Match('-') ? TokenType.MINUS_MINUS : Match('=') ? TokenType.MINUS_EQUAL : TokenType.MINUS); break; // -- -= -
                 case '+': AddToken(Match('+') ? TokenType.PLUS_PLUS : Match('=') ? TokenType.PLUS_EQUAL : TokenType.PLUS); break; // ++ += +
                 case '=': AddToken(Match('=') ? TokenType.EQUAL_EQUAL : Match('>') ? TokenType.LAMBDA : TokenType.EQUAL); break; // == => =
-                case '<': AddToken(Match('=') ? TokenType.LESS_EQUAL : TokenType.LESS); break; // <= <
-                case '>': AddToken(Match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER); break; // >= >
+                case '<': AddToken(Match('<') ? Match('=') ? TokenType.LEFT_SHIFT_EQUAL : TokenType.LEFT_SHIFT : Match('=') ? TokenType.LESS_EQUAL : TokenType.LESS); break; // <<= << <= <
+                case '>': AddToken(Match('>') ? Match('=') ? TokenType.RIGHT_SHIFT_EQUAL : TokenType.RIGHT_SHIFT : Match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER); break; // >>= >> >= >
                 case '*': AddToken(Match('=') ? TokenType.STAR_EQUAL : TokenType.STAR); break; // *= *
-                case '^': AddToken(Match('=') ? TokenType.EXP_EQUAL : TokenType.EXP); break; // ^= ^
-                case '@': AddToken(Match('@') ? TokenType.AT_AT : TokenType.AT); break; // @@ @
-                case '&':
-                    if (Match('&')) AddToken(TokenType.AND_AND);
-                    else ThrowError("Unexpected character.");
-                    break;
-                case '|':
-                    if (Match('|')) AddToken(TokenType.OR_OR);
-                    else ThrowError("Unexpected character.");
-                    break;
+                case '~': AddToken(Match('=') ? TokenType.EXP_EQUAL : TokenType.EXP); break; // ~= ~
+                case '!': AddToken(Match('=') ? TokenType.NOT_EQUAL : TokenType.NOT); break; // != !
+                case '&': AddToken(Match('&') ? TokenType.AND_AND : Match('=') ? TokenType.AND_EQUAL : TokenType.AND); break; // && &= &
+                case '|': AddToken(Match('|') ? TokenType.OR_OR : Match('=') ? TokenType.OR_EQUAL : TokenType.OR); break; // |= |
+                case '^': AddToken(Match('=') ? TokenType.XOR_EQUAL : TokenType.XOR); break; // ^= ^
+                case '%': AddToken(Match('=') ? TokenType.MOD_EQUAL : TokenType.MOD); break; // %= %
+                case '@': AddToken(Match('@') ? Match('=') ? TokenType.AT_AT_EQUAL : TokenType.AT_AT : Match('=') ? TokenType.AT_EQUAL : TokenType.AT); break; // @@= @@ @= @
                 case '/':
                     if (Match('/')) // Comments
                     {

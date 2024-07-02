@@ -79,12 +79,17 @@ namespace Odin
         MINUS, // -
         STAR, // *
         SLASH, // /
-        EXP, // ^
         QUOT, // "
         EQUAL, // =
         LESS, // <
         GREATER, // >
         AT, // @
+        NOT, // !
+        AND, // &
+        OR, // |
+        XOR, // ^
+        MOD, // %
+        EXP, // ~
 
         #endregion
 
@@ -98,12 +103,28 @@ namespace Odin
         AND_AND, // &&
         OR_OR, // ||
         AT_AT, // @@
+        AT_EQUAL, // @=
         LAMBDA, // =>
         STAR_EQUAL, // *=
         PLUS_EQUAL, // +=
         MINUS_EQUAL, // -=
         SLASH_EQUAL, // /=
-        EXP_EQUAL, // ^=
+        NOT_EQUAL, // !=
+        MOD_EQUAL, // %=
+        AND_EQUAL, // &=
+        OR_EQUAL, // |=
+        XOR_EQUAL, // ^=
+        EXP_EQUAL, // ~=
+        LEFT_SHIFT, // <<
+        RIGHT_SHIFT, // >>
+
+        #endregion
+
+        #region Triple-character tokens
+
+        AT_AT_EQUAL, // @@=
+        LEFT_SHIFT_EQUAL, // <<=
+        RIGHT_SHIFT_EQUAL, // >>=
 
         #endregion
 
