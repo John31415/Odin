@@ -13,6 +13,7 @@ namespace Odin
             Keywords = new Dictionary<string, TokenType>();
             Keywords["Action"] = TokenType.ACTION;
             Keywords["Board"] = TokenType.BOARD;
+            Keywords["Bool"] = TokenType.BOOL;
             Keywords["Deck"] = TokenType.DECK;
             Keywords["DeckOfPlayer"] = TokenType.DECK_OF_PLAYER;
             Keywords["Faction"] = TokenType.FACTION;
@@ -25,6 +26,7 @@ namespace Odin
             Keywords["HandOfPlayer"] = TokenType.HAND_OF_PLAYER;
             Keywords["Melee"] = TokenType.MELEE;
             Keywords["Name"] = TokenType.NAME;
+            Keywords["Number"] = TokenType.NUMBER;
             Keywords["OnActivation"] = TokenType.ON_ACTIVATION;
             Keywords["Owner"] = TokenType.OWNER;
             Keywords["Params"] = TokenType.PARAMS;
@@ -42,6 +44,7 @@ namespace Odin
             Keywords["Siege"] = TokenType.SIEGE;
             Keywords["Single"] = TokenType.SINGLE;
             Keywords["Source"] = TokenType.SOURCE;
+            Keywords["String"] = TokenType.STRING;
             Keywords["TriggerPlayer"] = TokenType.TRIGGER_PLAYER;
             Keywords["Type"] = TokenType.TYPE;
             Keywords["card"] = TokenType.CLASS_CARD;
@@ -110,9 +113,9 @@ namespace Odin
         #region Literals
 
         IDENTIFIER,
-        STRING,
-        NUMBER,
-        BOOL,
+        STRING, // String
+        NUMBER, // Number
+        BOOL, // Bool
 
         #endregion
 
@@ -122,6 +125,7 @@ namespace Odin
         CLASS_CARD, // card
         NAME, // Name
         PARAMS, // Params
+        AMOUNT, // Amount
         ACTION, // Action
         TRIGGER_PLAYER, // TriggerPlayer
         BOARD, // Board
@@ -156,10 +160,6 @@ namespace Odin
         FOR, // for
         IN, // in
         WHILE, // while
-
-        MELEE, // Melee
-        RANGED, // Ranged
-        SIEGE, // Siege
 
         S_HAND, // hand
         S_OTHER_HAND, // otherHand
