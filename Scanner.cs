@@ -56,11 +56,13 @@ namespace Odin
         {
             AddToken(type, null!);
         }
+
         private void AddToken(TokenType type, object literal)
         {
             string text = _source.Substring(start, current - start);
             _tokens.Add(new Token(type, text, literal, line, current - lineBeginning + 1));
         }
+
         private char Advance()
         {
             return _source[current++];

@@ -8,9 +8,9 @@ namespace Odin
 {
     internal class Token
     {
-        private TokenType _type;
+        internal TokenType _type;
         private string _lexeme;
-        private object _literal;
+        internal object _literal;
         private int _line;
         private int _column;
 
