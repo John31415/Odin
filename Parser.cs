@@ -89,8 +89,21 @@ namespace Odin
 
         private Expr<T> factor()
         {
-            Expr<T> expr = unary();
+            Expr<T> expr = expo();
             List<TokenType> operators = new List<TokenType> { TokenType.STAR, TokenType.SLASH };
+            while (match(operators))
+            {
+                Token oper = previous();
+                Expr<T> right = expo();
+                expr = new Binary<T>(expr, oper, right);
+            }
+            return expr;
+        }
+
+        private Expr<T> expo()
+        {
+            Expr<T> expr = unary();
+            List<TokenType> operators = new List<TokenType> { TokenType.EXP };
             while (match(operators))
             {
                 Token oper = previous();
@@ -99,6 +112,7 @@ namespace Odin
             }
             return expr;
         }
+
         private Expr<T> unary()
         {
             List<TokenType> operators = new List<TokenType> { TokenType.NOT, TokenType.MINUS };
