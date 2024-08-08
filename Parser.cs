@@ -15,162 +15,216 @@ namespace Odin
         private List<Token> _tokens;
         private int _current = 0;
 
-        public Parser(List <Token> tokens) 
+        public Parser(List<Token> tokens)
         {
             _tokens = tokens;
         }
 
-        private Expr<T> expression() => equality();
-
-        private Expr<T> equality()
+        internal Expr<T> Parse()
         {
-            Expr<T> expr = comparison();
+            return Expression();
+        }
+
+        private Expr<T> Expression() => Logic();
+
+        private Expr<T> Logic()
+        {
+            Expr<T> expr = Equality();
+            List<TokenType> operators = new List<TokenType> { TokenType.AND_AND, TokenType.OR_OR };
+            while (Match(operators))
+            {
+                Token oper = Previous();
+                Expr<T> right = Equality();
+                expr = new Binary<T>(expr, oper, right);
+            }
+            return expr;
+        }
+
+        private Expr<T> Equality()
+        {
+            Expr<T> expr = Comparison();
             List<TokenType> operators = new List<TokenType> { TokenType.NOT_EQUAL, TokenType.EQUAL_EQUAL };
-            while (match(operators))
+            while (Match(operators))
             {
-                Token oper = previous();
-                Expr<T> right = comparison();
+                Token oper = Previous();
+                Expr<T> right = Comparison();
                 expr = new Binary<T>(expr, oper, right);
             }
             return expr;
         }
 
-        private Expr<T> comparison()
+        private Expr<T> Comparison()
         {
-            Expr<T> expr = shifft();
+            Expr<T> expr = Shifft();
             List<TokenType> operators = new List<TokenType> { TokenType.LESS, TokenType.LESS_EQUAL, TokenType.GREATER, TokenType.GREATER_EQUAL };
-            while(match(operators))
+            while (Match(operators))
             {
-                Token oper = previous();
-                Expr<T> right = shifft();
+                Token oper = Previous();
+                Expr<T> right = Shifft();
                 expr = new Binary<T>(expr, oper, right);
             }
             return expr;
         }
 
-        private Expr<T> shifft()
+        private Expr<T> Shifft()
         {
-            Expr<T> expr = bitwise();
+            Expr<T> expr = Bitwise();
             List<TokenType> operators = new List<TokenType> { TokenType.LEFT_SHIFT, TokenType.RIGHT_SHIFT };
-            while (match(operators))
+            while (Match(operators))
             {
-                Token oper = previous();
-                Expr<T> right = bitwise();
+                Token oper = Previous();
+                Expr<T> right = Bitwise();
                 expr = new Binary<T>(expr, oper, right);
             }
             return expr;
         }
 
-        private Expr<T> bitwise()
+        private Expr<T> Bitwise()
         {
-            Expr<T> expr = term();
+            Expr<T> expr = Term();
             List<TokenType> operators = new List<TokenType> { TokenType.OR, TokenType.AND, TokenType.XOR };
-            while (match(operators))
+            while (Match(operators))
             {
-                Token oper = previous();
-                Expr<T> right = term();
+                Token oper = Previous();
+                Expr<T> right = Term();
                 expr = new Binary<T>(expr, oper, right);
             }
             return expr;
         }
 
-        private Expr<T> term()
+        private Expr<T> Term()
         {
-            Expr<T> expr = factor();
+            Expr<T> expr = Factor();
             List<TokenType> operators = new List<TokenType> { TokenType.PLUS, TokenType.MINUS };
-            while (match(operators))
+            while (Match(operators))
             {
-                Token oper = previous();
-                Expr<T> right = factor();
+                Token oper = Previous();
+                Expr<T> right = Factor();
                 expr = new Binary<T>(expr, oper, right);
             }
             return expr;
         }
 
-        private Expr<T> factor()
+        private Expr<T> Factor()
         {
-            Expr<T> expr = expo();
-            List<TokenType> operators = new List<TokenType> { TokenType.STAR, TokenType.SLASH };
-            while (match(operators))
+            Expr<T> expr = Expo();
+            List<TokenType> operators = new List<TokenType> { TokenType.STAR, TokenType.SLASH, TokenType.MOD };
+            while (Match(operators))
             {
-                Token oper = previous();
-                Expr<T> right = expo();
+                Token oper = Previous();
+                Expr<T> right = Expo();
                 expr = new Binary<T>(expr, oper, right);
             }
             return expr;
         }
 
-        private Expr<T> expo()
+        private Expr<T> Expo()
         {
-            Expr<T> expr = unary();
+            Expr<T> expr = Unary();
             List<TokenType> operators = new List<TokenType> { TokenType.EXP };
-            while (match(operators))
+            while (Match(operators))
             {
-                Token oper = previous();
-                Expr<T> right = unary();
+                Token oper = Previous();
+                Expr<T> right = Unary();
                 expr = new Binary<T>(expr, oper, right);
             }
             return expr;
         }
 
-        private Expr<T> unary()
+        private Expr<T> Unary()
         {
             List<TokenType> operators = new List<TokenType> { TokenType.NOT, TokenType.MINUS };
-            if (match(operators))
+            if (Match(operators))
             {
-                Token oper = previous();
-                Expr<T> right = unary();
+                Token oper = Previous();
+                Expr<T> right = Unary();
                 return new Unary<T>(oper, right);
             }
-            return primary();
+            return Primary();
         }
 
-        private Expr<T> primary()
+        private Expr<T> Primary()
         {
             List<TokenType> operators = new List<TokenType> { TokenType.FALSE };
-            if (match(operators)) return new Literal<T>(false);
-            operators = new List<TokenType> { TokenType.TRUE };
-            if (match(operators)) return new Literal<T>(true);
-            operators = new List<TokenType> { TokenType.NUMBER, TokenType.STRING };
-            if (match(operators)) return new Literal<T>(previous()._literal);
-            operators = new List<TokenType> { TokenType.LEFT_PAREN };
-            if (match(operators))
+            if (Match(operators))
             {
-                Expr<T> expr = expression();
-                consume(TokenType.RIGHT_PAREN, "Expected ')' after expression.");
+                return new Literal<T>(false);
+            }
+            operators = new List<TokenType> { TokenType.TRUE };
+            if (Match(operators))
+            {
+                return new Literal<T>(true);
+            }
+            operators = new List<TokenType> { TokenType.NUMBER, TokenType.STRING };
+            if (Match(operators))
+            {
+                return new Literal<T>(Previous()._literal);
+            }
+            operators = new List<TokenType> { TokenType.LEFT_PAREN };
+            if (Match(operators))
+            {
+                Expr<T> expr = Expression();
+                Consume(TokenType.RIGHT_PAREN, "Expected ')' after expression.");
                 return new Grouping<T>(expr);
             }
+            ThrowError(Peek(), "Expected expression.");
+            return null!;
         }
 
-        private bool match(List<TokenType> operators)
+        private bool Match(List<TokenType> operators)
         {
             foreach (TokenType oper in operators)
             {
-                if (check(oper))
+                if (Check(oper))
                 {
-                    advance();
+                    Advance();
                     return true;
                 }
             }
             return false;
         }
 
-        private bool check(TokenType oper)
+        private bool Check(TokenType oper)
         {
-            if (isAtEnd()) return false;
-            return peek()._type == oper;
+            if (IsAtEnd()) return false;
+            return Peek()._type == oper;
         }
 
-        private Token advance()
+        private Token Advance()
         {
-            if (!isAtEnd()) _current++;
-            return previous();
+            if (!IsAtEnd()) _current++;
+            return Previous();
         }
 
-        private bool isAtEnd() => peek()._type == TokenType.EOF;
+        private bool IsAtEnd() => Peek()._type == TokenType.EOF;
 
-        private Token peek() => _tokens[_current++];
+        private Token Peek() => _tokens[_current];
 
-        private Token previous() => _tokens[_current - 1];
+        private Token Previous() => _tokens[_current - 1];
+
+        private Token Consume(TokenType type, string message)
+        {
+            if (Check(type)) return Advance();
+            ThrowError(Peek(), message);
+            Synchronize();
+            return null!;
+        }
+
+        private void ThrowError(Token token, string message)
+        {
+            ErrorReporter.ThrowError(message, token._line, token._position, token._lineBeginning);
+        }
+
+        private void Synchronize()
+        {
+            Advance();
+            TokenDictionary tokenDictionary = new TokenDictionary();
+            Dictionary <string, TokenType> StatementBeginning = tokenDictionary.StatementBeginning;
+            while (!IsAtEnd())
+            {
+                if (Previous()._type == TokenType.SEMICOLON || StatementBeginning.ContainsValue(Peek()._type)) return;
+                Advance();
+            }
+        }
     }
 }
