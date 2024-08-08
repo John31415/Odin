@@ -20,23 +20,19 @@ namespace Odin
         private int lineBeginning = 0;
         private Dictionary<string, TokenType> Keywords;
 
+        public static string Source { get; private set; }
+
         public Scanner(string source)
         {
             _source = source;
+            Source = source;
             TokenDictionary _tokenDictionary = new TokenDictionary();
             Keywords = _tokenDictionary.Keywords;
         }
 
-        private string ErrorLine()
-        {
-            int iter = current - 1;
-            for (int i = 0; i < 100 && iter < _source.Length - 1 && _source[iter] != '\n'; i++) iter++;
-            return _source.Substring(lineBeginning, iter - lineBeginning + 1);
-        }
-
         private void ThrowError(string message)
         {
-            ErrorReporter.Error(line, current - lineBeginning - 1, ErrorLine(), message);
+            ErrorReporter.ThrowError(message, line, current, lineBeginning);
         }
 
         private bool IsAtEnd()
@@ -60,7 +56,7 @@ namespace Odin
         private void AddToken(TokenType type, object literal)
         {
             string text = _source.Substring(start, current - start);
-            _tokens.Add(new Token(type, text, literal, line, current - lineBeginning + 1));
+            _tokens.Add(new Token(type, text, literal, line, current - lineBeginning + 1, current, lineBeginning));
         }
 
         private char Advance()
@@ -190,7 +186,7 @@ namespace Odin
                 start = current;
                 ScanToken();
             }
-            _tokens.Add(new Token(TokenType.EOF, "", null!, line, 1));
+            _tokens.Add(new Token(TokenType.EOF, "", null!, line, 1, current, lineBeginning));
             return _tokens;
         }
     }

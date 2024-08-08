@@ -29,9 +29,22 @@ namespace Odin
             WriteLine(error);
         }
 
-        public static void Error(int line, int column, string errorLine, string message)
+        private static void Error(int line, int column, string errorLine, string message)
         {
             ReportError(line, column, errorLine, message);
+        }
+
+        private static string ErrorLine(int current, int lineBeginning)
+        {
+            string _source = Scanner.Source;
+            int iter = current - 1;
+            for (int i = 0; i < 100 && iter < _source.Length - 1 && _source[iter] != '\n'; i++) iter++;
+            return _source.Substring(lineBeginning, iter - lineBeginning + 1);
+        }
+
+        internal static void ThrowError(string message, int line, int current, int lineBeginning)
+        {
+            Error(line, current - lineBeginning - 1, ErrorLine(current, lineBeginning), message);
         }
     }
 }

@@ -9,14 +9,36 @@ namespace Odin
     public class TokenDictionary
     {
         public Dictionary<string, TokenType> Keywords;
+        public Dictionary<string, TokenType> StatementBeginning;
+
         public TokenDictionary() {
             Keywords = new Dictionary<string, TokenType>();
-            Keywords["Action"] = TokenType.ACTION;
+            StatementBeginning = new Dictionary<string, TokenType>();
+
+            StatementBeginning["Action"] = TokenType.ACTION;//
+            StatementBeginning["Bool"] = TokenType.BOOL;//
+            StatementBeginning["Faction"] = TokenType.FACTION;//
+            StatementBeginning["Name"] = TokenType.NAME;//
+            StatementBeginning["OnActivation"] = TokenType.ON_ACTIVATION;//
+            StatementBeginning["Params"] = TokenType.PARAMS;//
+            StatementBeginning["PostAction"] = TokenType.POST_ACTION;//
+            StatementBeginning["Power"] = TokenType.POWER;//
+            StatementBeginning["Predicate"] = TokenType.PREDICATE;//
+            StatementBeginning["Range"] = TokenType.RANGE;//
+            StatementBeginning["Selector"] = TokenType.SELECTOR;//
+            StatementBeginning["Single"] = TokenType.SINGLE;//
+            StatementBeginning["Source"] = TokenType.SOURCE;//
+            StatementBeginning["Type"] = TokenType.TYPE;//
+            StatementBeginning["card"] = TokenType.CLASS_CARD;//
+            StatementBeginning["effect"] = TokenType.CLASS_EFFECT;//
+            StatementBeginning["for"] = TokenType.FOR;//
+            StatementBeginning["while"] = TokenType.WHILE;//
+
+            Keywords = StatementBeginning;
+
             Keywords["Board"] = TokenType.BOARD;
-            Keywords["Bool"] = TokenType.BOOL;
             Keywords["Deck"] = TokenType.DECK;
             Keywords["DeckOfPlayer"] = TokenType.DECK_OF_PLAYER;
-            Keywords["Faction"] = TokenType.FACTION;
             Keywords["Field"] = TokenType.FIELD;
             Keywords["FieldOfPlayer"] = TokenType.FIELD_OF_PLAYER;
             Keywords["Find"] = TokenType.FIND;
@@ -24,32 +46,18 @@ namespace Odin
             Keywords["GraveyardOfPlayer"] = TokenType.GRAVEYARD_OF_PLAYER;
             Keywords["Hand"] = TokenType.HAND;
             Keywords["HandOfPlayer"] = TokenType.HAND_OF_PLAYER;
-            Keywords["Name"] = TokenType.NAME;
             Keywords["Number"] = TokenType.NUMBER;
-            Keywords["OnActivation"] = TokenType.ON_ACTIVATION;
             Keywords["Owner"] = TokenType.OWNER;
-            Keywords["Params"] = TokenType.PARAMS;
             Keywords["Pop"] = TokenType.POP;
-            Keywords["PostAction"] = TokenType.POST_ACTION;
-            Keywords["Power"] = TokenType.POWER;
-            Keywords["Predicate"] = TokenType.PREDICATE;
             Keywords["Push"] = TokenType.PUSH;
-            Keywords["Range"] = TokenType.RANGE;
             Keywords["Remove"] = TokenType.REMOVE;
-            Keywords["Selector"] = TokenType.SELECTOR;
             Keywords["SendBottom"] = TokenType.SEND_BOTTOM;
             Keywords["Shuffle"] = TokenType.SHUFFLE;
-            Keywords["Single"] = TokenType.SINGLE;
-            Keywords["Source"] = TokenType.SOURCE;
             Keywords["String"] = TokenType.STRING;
             Keywords["TriggerPlayer"] = TokenType.TRIGGER_PLAYER;
-            Keywords["Type"] = TokenType.TYPE;
-            Keywords["card"] = TokenType.CLASS_CARD;
             Keywords["deck"] = TokenType.S_DECK;
-            Keywords["effect"] = TokenType.CLASS_EFFECT;
             Keywords["false"] = TokenType.FALSE;
             Keywords["field"] = TokenType.S_FIELD;
-            Keywords["for"] = TokenType.FOR;
             Keywords["hand"] = TokenType.S_HAND;
             Keywords["in"] = TokenType.IN;
             Keywords["otherDeck"] = TokenType.S_OTHER_DECK;
@@ -57,7 +65,6 @@ namespace Odin
             Keywords["otherHand"] = TokenType.S_OTHER_HAND;
             Keywords["parent"] = TokenType.S_PARENT;
             Keywords["true"] = TokenType.TRUE;
-            Keywords["while"] = TokenType.WHILE;
         }
     }
 

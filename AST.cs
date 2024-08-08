@@ -9,7 +9,7 @@ namespace Odin
 {
     internal abstract class Expr<T>
     {
-        internal abstract T accept(IVisitor<T> visitor);
+        internal abstract T Accept(IVisitor<T> visitor);
     }
 
     internal class Binary<T> : Expr<T>
@@ -24,7 +24,7 @@ namespace Odin
             _right = right;
         }
 
-        internal override T accept(IVisitor<T> visitor) => visitor.visitBinaryExpr(this);
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitBinaryExpr(this);
     }
 
     internal class Grouping<T> : Expr<T>
@@ -35,7 +35,7 @@ namespace Odin
             _expression = expression;
         }
 
-        internal override T accept(IVisitor<T> visitor) => visitor.visitGroupingExpr(this);
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitGroupingExpr(this);
     }
 
     internal class Literal<T> : Expr<T>
@@ -46,7 +46,7 @@ namespace Odin
             _value = value;
         }
 
-        internal override T accept(IVisitor<T> visitor) => visitor.visitLiteralExpr(this);
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitLiteralExpr(this);
     }
 
     internal class Unary<T> : Expr<T>
@@ -59,6 +59,6 @@ namespace Odin
             _right = right;
         }
 
-        internal override T accept(IVisitor<T> visitor) => visitor.visitUnaryExpr(this);
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitUnaryExpr(this);
     }
 }

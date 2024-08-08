@@ -9,9 +9,9 @@ namespace Odin
 {
     internal interface IVisitor<T>
     {
-        internal T visitBinaryExpr(Binary<T> expr);
-        internal T visitGroupingExpr(Grouping<T> expr);
-        internal T visitLiteralExpr(Literal<T> expr);
-        internal T visitUnaryExpr(Unary<T> expr);
+        internal T VisitBinaryExpr(Binary<T> expr);
+        internal T VisitGroupingExpr(Grouping<T> expr);
+        internal T VisitLiteralExpr(Literal<T> expr);
+        internal T VisitUnaryExpr(Unary<T> expr);
     }
 }
