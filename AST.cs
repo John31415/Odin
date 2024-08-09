@@ -14,9 +14,9 @@ namespace Odin
 
     internal class Binary<T> : Expr<T>
     {
-        Expr<T> _left;
-        Token _oper;
-        Expr<T> _right;
+        internal Expr<T> _left;
+        internal Token _oper;
+        internal Expr<T> _right;
         internal Binary(Expr<T> left, Token oper, Expr<T> right)
         {
             _left = left;
@@ -29,7 +29,7 @@ namespace Odin
 
     internal class Grouping<T> : Expr<T>
     {
-        Expr<T> _expression;
+        internal Expr<T> _expression;
         internal Grouping(Expr<T> expression)
         {
             _expression = expression;
@@ -40,7 +40,7 @@ namespace Odin
 
     internal class Literal<T> : Expr<T>
     {
-        object _value;
+        internal object _value;
         internal Literal(object value)
         {
             _value = value;
@@ -51,8 +51,8 @@ namespace Odin
 
     internal class Unary<T> : Expr<T>
     {
-        Token _oper;
-        Expr<T> _right;
+        internal Token _oper;
+        internal Expr<T> _right;
         internal Unary(Token oper, Expr<T> right)
         {
             _oper = oper;
