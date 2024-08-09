@@ -95,7 +95,7 @@ namespace Odin
         private Expr<T> Term()
         {
             Expr<T> expr = Factor();
-            List<TokenType> operators = new List<TokenType> { TokenType.PLUS, TokenType.MINUS };
+            List<TokenType> operators = new List<TokenType> { TokenType.PLUS, TokenType.MINUS, TokenType.AT, TokenType.AT_AT };
             while (Match(operators))
             {
                 Token oper = Previous();
