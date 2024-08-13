@@ -16,7 +16,7 @@ namespace Odin
             int startIndex = Max(0, column - 40);
             int length = Min(errorLine.Length - startIndex, 80);
             errorLine = "... " + errorLine.Substring(startIndex, length) + " ...";
-            string error = "\nError: " + message + "\n   (" + line + ", " + column + ") | " + errorLine + "\n";
+            string error = "\nError: " + message + "\n   (" + line + ", " + (column + 1) + ") | " + errorLine + "\n";
             column = column - startIndex + line.ToString().Length + column.ToString().Length + 14;
             while (column > 0)
             {
@@ -36,10 +36,10 @@ namespace Odin
 
         private static string ErrorLine(int current, int lineBeginning)
         {
-            string _source = Scanner.Source;
+            string? _source = Scanner.Source;
             int iter = current - 1;
-            for (int i = 0; i < 100 && iter < _source.Length - 1 && _source[iter] != '\n'; i++) iter++;
-            return _source.Substring(lineBeginning, iter - lineBeginning + 1);
+            for (int i = 0; i < 100 && iter < _source!.Length - 1 && _source[iter] != '\n'; i++) iter++;
+            return _source!.Substring(lineBeginning, iter - lineBeginning + 1);
         }
 
         internal static void ThrowError(string message, int line, int current, int lineBeginning)
