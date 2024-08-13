@@ -26,7 +26,7 @@ namespace Odin
             switch (expr._oper._type)
             {
                 case TokenType.NOT: return !IsTrue(right);
-                case TokenType.MINUS: return -(int)right;
+                case TokenType.MINUS: return -(long)right;
             }
             return null!;
         }
@@ -36,7 +36,7 @@ namespace Odin
             object left = Evaluate(expr._left);
             object right = Evaluate(expr._right);
             bool band;
-            int l, r;
+            long l, r;
             switch (expr._oper._type)
             {
                 case TokenType.EQUAL_EQUAL:
@@ -54,39 +54,39 @@ namespace Odin
                 case TokenType.GREATER:
                     if (CheckComparison(left, expr._oper, right))
                     {
-                        return (int)left > (int)right;
+                        return Compare(left, right) > 0;
                     }
                     break;
                 case TokenType.LESS:
                     if (CheckComparison(left, expr._oper, right))
                     {
-                        return (int)left < (int)right;
+                        return Compare(left, right) < 0;
                     }
                     break;
                 case TokenType.GREATER_EQUAL:
                     if (CheckComparison(left, expr._oper, right))
                     {
-                        return (int)left >= (int)right;
+                        return Compare(left, right) >= 0;
                     }
                     break;
                 case TokenType.LESS_EQUAL:
                     if (CheckComparison(left, expr._oper, right))
                     {
-                        return (int)left <= (int)right;
+                        return Compare(left, right) <= 0;
                     }
                     break;
                 case TokenType.LEFT_SHIFT:
                     (band, l, r) = CheckNumbers(left, expr._oper, right);
                     if (band)
                     {
-                        return l << r;
+                        return (long)((int)l << (int)r);
                     }
                     break;
                 case TokenType.RIGHT_SHIFT:
                     (band, l, r) = CheckNumbers(left, expr._oper, right);
                     if (band)
                     {
-                        return l >> r;
+                        return (long)((int)l >> (int)r);
                     }
                     break;
                 case TokenType.AND:
@@ -176,15 +176,15 @@ namespace Odin
         {
             if (obj == null) return false;
             if (obj is bool) return (bool)obj;
-            if (obj is int) return (int)obj == 0;
-            if (obj is string) return (string)obj == "";
+            if (obj is long) return (long)obj != 0;
+            if (obj is string) return (string)obj != "";
             return true;
         }
 
-        private int QuickPow(int a, int b)
+        private long QuickPow(long a, long b)
         {
             if (b == 0) return 0;
-            int aux = 1;
+            long aux = 1;
             while (b > 0)
             {
                 if ((b % 2) == 1) aux *= a;
@@ -208,25 +208,35 @@ namespace Odin
                 ThrowError(token, "Operands must be of the same type.");
                 return false;
             }
+            if (token._type != TokenType.EQUAL_EQUAL)
+            {
+                if (a is bool)
+                {
+                    ThrowError(token, "Operands must be integers.");
+                    return false;
+                }
+            }
             return true;
         }
 
-        private (bool, int, int) CheckNumbers(object a, Token token, object b)
+        private (bool, long, long) CheckNumbers(object a, Token token, object b)
         {
             if ((a is string) || (b is string))
             {
                 ThrowError(token, "Operands can't be strings.");
                 return (false, 0, 0);
             }
-            int _a, _b;
-            if (a is int) _a = (int)a;
+            long _a, _b;
+            if (a is long) _a = (long)a;
             else if ((bool)a == true) _a = 1;
             else _a = 0;
-            if (b is int) _b = (int)b;
+            if (b is long) _b = (long)b;
             else if ((bool)b == true) _b = 1;
             else _b = 0;
             return (true, _a, _b);
         }
+
+        private int Compare(object a, object b) => (a is long) ? ((long)a).CompareTo((long)b) : ((string)a).CompareTo((string)b);
 
         private void ThrowError(Token token, string message)
         {
