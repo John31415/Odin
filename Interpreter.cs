@@ -39,6 +39,10 @@ namespace Odin
             long l, r;
             switch (expr._oper._type)
             {
+                case TokenType.AND_AND:
+                    return (IsTrue(left) && IsTrue(right));
+                case TokenType.OR_OR:
+                    return (IsTrue(left) || IsTrue(right));
                 case TokenType.EQUAL_EQUAL:
                     if (CheckComparison(left, expr._oper, right))
                     {

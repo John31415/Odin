@@ -20,7 +20,7 @@ namespace Odin
         private int lineBeginning = 0;
         private Dictionary<string, TokenType> Keywords;
 
-        public static string Source { get; private set; }
+        public static string? Source { get; private set; }
 
         public Scanner(string source)
         {
