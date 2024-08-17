@@ -13,5 +13,8 @@ namespace Odin
         internal T VisitGroupingExpr(Grouping<T> expr);
         internal T VisitLiteralExpr(Literal<T> expr);
         internal T VisitUnaryExpr(Unary<T> expr);
+        internal T VisitVariableExpr(Variable<T> var);
+        internal T VisitExpressionStmt(Expression<T> stmt);
+        internal T VisitVarStmt(Var<T> var);
     }
 }
