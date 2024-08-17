@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,10 +11,19 @@ namespace Odin
 {
     internal class Interpreter : IVisitor<object>
     {
-        public void Interpret(Expr<object> expr)
+        private Environment environment = new Environment();
+
+        public void Interpret(List <Stmt<object>> statements)
         {
-            object value = Evaluate(expr);
-            WriteLine(value);
+            foreach(Stmt<object> stmt in statements)
+            {
+                WriteLine(Execute(stmt));
+            }
+        }
+
+        private object Execute(Stmt<object> stmt)
+        {
+            return stmt.Accept(this);
         }
 
         public object VisitLiteralExpr(Literal<object> expr) => expr._value;
@@ -173,6 +183,24 @@ namespace Odin
             }
             return null!;
         }
+
+        public object VisitExpressionStmt(Expression<object> stmt)
+        {
+            return Evaluate(stmt._expression);
+        }
+
+        public object VisitVarStmt(Var<object> stmt)
+        {
+            object value = null!;
+            if(stmt._initializer != null)
+            {
+                value = Evaluate(stmt._initializer);
+            }
+            environment.Define(stmt._name._lexeme, value);
+            return value;
+        }
+
+        public object VisitVariableExpr(Variable<object> expr) => environment.Get(expr._name);
 
         private object Evaluate(Expr<object> expr) => expr.Accept(this);
 
