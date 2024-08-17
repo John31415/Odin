@@ -20,9 +20,45 @@ namespace Odin
             _tokens = tokens;
         }
 
-        internal Expr<T> Parse()
+        internal List<Stmt<T>> Parse()
         {
-            return Expression();
+            List<Stmt<T>> statements = new List<Stmt<T>>();
+            while (!IsAtEnd())
+            {
+                statements.Add(Declaration());
+            }
+            return statements;
+        }
+
+        private Stmt<T> Declaration()
+        {
+            List<TokenType> identifier = new List<TokenType> { TokenType.IDENTIFIER };
+            if (Match(identifier))
+            {
+                return VarDeclaration();
+            }
+            return Statement();
+        }
+
+        private Stmt<T> VarDeclaration()
+        {
+            Token name = Previous();
+            Consume(TokenType.EQUAL, "Expected '=' after variable name.");
+            Expr<T> initializer = Expression();
+            Consume(TokenType.SEMICOLON, "Expected ';' after variable declaration.");
+            return new Var<T>(name, initializer);
+        }
+
+        private Stmt<T> Statement()
+        {
+            return ExpressionStatement();
+        }
+
+        private Stmt<T> ExpressionStatement()
+        {
+            Expr<T> expr = Expression();
+            Consume(TokenType.SEMICOLON, "Expected ';' after expression.");
+            return new Expression<T>(expr);
         }
 
         private Expr<T> Expression() => Logic();
@@ -160,6 +196,11 @@ namespace Odin
             {
                 return new Literal<T>(Previous()._literal);
             }
+            operators = new List<TokenType> { TokenType.IDENTIFIER };
+            if (Match(operators))
+            {
+                return new Variable<T>(Previous());
+            }
             operators = new List<TokenType> { TokenType.LEFT_PAREN };
             if (Match(operators))
             {
@@ -205,7 +246,7 @@ namespace Odin
         private Token Consume(TokenType type, string message)
         {
             if (Check(type)) return Advance();
-            ThrowError(Peek(), message);
+            ThrowError(Previous(), message);
             Synchronize();
             return null!;
         }
@@ -219,7 +260,7 @@ namespace Odin
         {
             Advance();
             TokenDictionary tokenDictionary = new TokenDictionary();
-            Dictionary <string, TokenType> StatementBeginning = tokenDictionary.StatementBeginning;
+            Dictionary<string, TokenType> StatementBeginning = tokenDictionary.StatementBeginning;
             while (!IsAtEnd())
             {
                 if (Previous()._type == TokenType.SEMICOLON || StatementBeginning.ContainsValue(Peek()._type)) return;
