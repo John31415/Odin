@@ -101,4 +101,15 @@ namespace Odin
 
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitVarStmt(this);
     }
+
+    internal class Block<T> : Stmt<T>
+    {
+        internal List<Stmt<T>> _statements;
+        internal Block(List<Stmt<T>> statements)
+        {
+            _statements = statements;
+        }
+
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitBlockStmt(this);
+    }
 }

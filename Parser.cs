@@ -51,7 +51,20 @@ namespace Odin
 
         private Stmt<T> Statement()
         {
+            List<TokenType> curly = new List<TokenType> { TokenType.LEFT_CURLY };
+            if (Match(curly)) return new Block<T>(Block());
             return ExpressionStatement();
+        }
+
+        private List<Stmt<T>> Block()
+        {
+            List<Stmt<T>> statements = new List<Stmt<T>>();
+            while(!Check(TokenType.RIGHT_CURLY) && !IsAtEnd())
+            {
+                statements.Add(Declaration());
+            }
+            Consume(TokenType.RIGHT_CURLY, "Expected '}' after block.");
+            return statements;
         }
 
         private Stmt<T> ExpressionStatement()

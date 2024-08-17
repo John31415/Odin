@@ -13,9 +13,9 @@ namespace Odin
     {
         private Environment environment = new Environment();
 
-        public void Interpret(List <Stmt<object>> statements)
+        public void Interpret(List<Stmt<object>> statements)
         {
-            foreach(Stmt<object> stmt in statements)
+            foreach (Stmt<object> stmt in statements)
             {
                 WriteLine(Execute(stmt));
             }
@@ -192,7 +192,7 @@ namespace Odin
         public object VisitVarStmt(Var<object> stmt)
         {
             object value = null!;
-            if(stmt._initializer != null)
+            if (stmt._initializer != null)
             {
                 value = Evaluate(stmt._initializer);
             }
@@ -201,6 +201,24 @@ namespace Odin
         }
 
         public object VisitVariableExpr(Variable<object> expr) => environment.Get(expr._name);
+
+        public object VisitBlockStmt(Block<object> stmt)
+        {
+            ExecuteBlock(stmt._statements, new Environment(environment));
+            return null!;
+        }
+
+        private void ExecuteBlock(List<Stmt<object>> statements, Environment environment)
+        {
+            Environment previous = this.environment;
+            this.environment = environment;
+            foreach (Stmt<object> stmt in statements)
+            {
+                //Execute(stmt);
+                WriteLine(Execute(stmt));
+            }
+            this.environment = previous;
+        }
 
         private object Evaluate(Expr<object> expr) => expr.Accept(this);
 
