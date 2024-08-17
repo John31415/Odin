@@ -14,7 +14,9 @@ namespace Odin
         private static void ReportError(int line, int column, string errorLine, string message)
         {
             int startIndex = Max(0, column - 40);
+            while (errorLine[startIndex] == ' ' || errorLine[startIndex] == '\n') startIndex++;
             int length = Min(errorLine.Length - startIndex, 80);
+            while (errorLine[startIndex + length - 1] == ' ' || errorLine[startIndex + length - 1] == '\n') length--;
             errorLine = "... " + errorLine.Substring(startIndex, length) + " ...";
             string error = "\nError: " + message + "\n   (" + line + ", " + (column + 1) + ") | " + errorLine + "\n";
             column = column - startIndex + line.ToString().Length + column.ToString().Length + 14;
@@ -24,8 +26,6 @@ namespace Odin
                 column--;
             }
             error += "^-- Here.\n";
-
-            //print error
             WriteLine(error);
         }
 
@@ -38,7 +38,7 @@ namespace Odin
         {
             string? _source = Scanner.Source;
             int iter = current - 1;
-            for (int i = 0; i < 100 && iter < _source!.Length - 1 && _source[iter] != '\n'; i++) iter++;
+            for (int i = 0; i < 100 && iter < _source!.Length - 1 && _source[iter + 1] != '\n'; i++) iter++;
             return _source!.Substring(lineBeginning, iter - lineBeginning + 1);
         }
 
