@@ -53,7 +53,18 @@ namespace Odin
         {
             List<TokenType> curly = new List<TokenType> { TokenType.LEFT_CURLY };
             if (Match(curly)) return new Block<T>(Block());
+            List<TokenType> While = new List<TokenType> { TokenType.WHILE };
+            if (Match(While)) return WhileStatement();
             return ExpressionStatement();
+        }
+
+        private Stmt<T> WhileStatement()
+        {
+            Consume(TokenType.LEFT_PAREN, "Expected '(' after 'while'.");
+            Expr<T> condition = Expression();
+            Consume(TokenType.RIGHT_PAREN, "Expected ')' after 'condition'.");
+            Stmt<T> body = Statement();
+            return new While<T>(condition, body);
         }
 
         private List<Stmt<T>> Block()

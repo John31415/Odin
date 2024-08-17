@@ -17,5 +17,6 @@ namespace Odin
         internal T VisitExpressionStmt(Expression<T> stmt);
         internal T VisitBlockStmt(Block<T> statements);
         internal T VisitVarStmt(Var<T> var);
+        internal T VisitWhileStmt(While<T> statements);
     }
 }

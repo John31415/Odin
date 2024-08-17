@@ -36,8 +36,21 @@ namespace Odin
 
         public void Define(string name, object value)
         {
-            if (values.ContainsKey(name)) values[name] = value;
-            else values.Add(name, value);
+            if(!Assign(name, value))
+            {
+                values.Add(name, value);
+            }
+        }
+
+        private bool Assign(string name, object value)
+        {
+            if (values.ContainsKey(name))
+            {
+                values[name] = value;
+                return true;
+            }
+            if (enclosing != null) return enclosing.Assign(name, value);
+            return false;
         }
 
         private void ThrowError(Token token, string message)

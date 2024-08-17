@@ -208,6 +208,16 @@ namespace Odin
             return null!;
         }
 
+        public object VisitWhileStmt(While<object> stmt)
+        {
+            while (IsTrue(Evaluate(stmt._condition)))
+            {
+                //Execute(stmt._body);
+                WriteLine(Execute(stmt._body));
+            }
+            return null!;
+        }
+
         private void ExecuteBlock(List<Stmt<object>> statements, Environment environment)
         {
             Environment previous = this.environment;
