@@ -61,4 +61,44 @@ namespace Odin
 
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitUnaryExpr(this);
     }
+
+    internal class Variable<T> : Expr<T>
+    {
+        internal Token _name;
+        internal Variable(Token name)
+        {
+            _name = name;
+        }
+
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitVariableExpr(this);
+    }
+
+    internal abstract class Stmt<T>
+    {
+        internal abstract T Accept(IVisitor<T> visitor);
+    }
+
+    internal class Expression<T> : Stmt<T>
+    {
+        internal Expr<T> _expression;
+        internal Expression(Expr<T> expression)
+        {
+            _expression = expression;
+        }
+
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitExpressionStmt(this);
+    }
+
+    internal class Var<T> : Stmt<T>
+    {
+        internal Token _name;
+        internal Expr<T> _initializer;
+        internal Var(Token name, Expr<T> initializer)
+        {
+            _name = name;
+            _initializer = initializer;
+        }
+
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitVarStmt(this);
+    }
 }
