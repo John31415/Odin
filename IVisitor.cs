@@ -14,6 +14,8 @@ namespace Odin
         internal T VisitLiteralExpr(Literal<T> expr);
         internal T VisitUnaryExpr(Unary<T> expr);
         internal T VisitVariableExpr(Variable<T> var);
+        internal T VisitPostOperExpr(PostOper<T> oper);
+        internal T VisitPreOperExpr(PreOper<T> oper);
         internal T VisitExpressionStmt(Expression<T> stmt);
         internal T VisitBlockStmt(Block<T> statements);
         internal T VisitVarStmt(Var<T> var);

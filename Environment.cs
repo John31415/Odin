@@ -30,7 +30,7 @@ namespace Odin
                 return values[name._lexeme];
             }
             if (enclosing != null) return enclosing.Get(name);
-            ThrowError(name, $"Undefined variable '{name._lexeme}' .");
+            ThrowError(name, $"Undefined variable '{name._lexeme}'.");
             return null!;
         }
 

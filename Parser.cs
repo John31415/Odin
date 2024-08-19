@@ -43,10 +43,23 @@ namespace Odin
         private Stmt<T> VarDeclaration()
         {
             Token name = Previous();
-            Consume(TokenType.EQUAL, "Expected '=' after variable name.");
+            List<TokenType> opers = new List<TokenType> { TokenType.EQUAL, TokenType.AT_EQUAL, TokenType.STAR_EQUAL, TokenType.PLUS_EQUAL, 
+                TokenType.MINUS_EQUAL, TokenType.SLASH_EQUAL, TokenType.MOD_EQUAL, TokenType.AND_EQUAL, TokenType.OR_EQUAL, TokenType.XOR_EQUAL, 
+                TokenType.EXP_EQUAL, TokenType.LEFT_SHIFT_EQUAL, TokenType.RIGHT_SHIFT_EQUAL, TokenType.AT_AT_EQUAL };
+            Token oper = Peek();
+            if (!Match(opers)) 
+            {
+                if(oper._type == TokenType.PLUS_PLUS || oper._type == TokenType.MINUS_MINUS)
+                {
+                    _current--;
+                    return ExpressionStatement();
+                }
+                ThrowError(Peek(), "Only assignment, call, increment and decrement can be used as a statement.");
+                return new Var<T>(name, oper, new Literal<T>(null!));
+            }
             Expr<T> initializer = Expression();
-            Consume(TokenType.SEMICOLON, "Expected ';' after variable declaration.");
-            return new Var<T>(name, initializer);
+            Consume(TokenType.SEMICOLON, "Expected ';' after variable assignation.");
+            return new Var<T>(name, oper, initializer);
         }
 
         private Stmt<T> Statement()
@@ -70,7 +83,7 @@ namespace Odin
         private List<Stmt<T>> Block()
         {
             List<Stmt<T>> statements = new List<Stmt<T>>();
-            while(!Check(TokenType.RIGHT_CURLY) && !IsAtEnd())
+            while (!Check(TokenType.RIGHT_CURLY) && !IsAtEnd())
             {
                 statements.Add(Declaration());
             }
@@ -223,6 +236,12 @@ namespace Odin
             operators = new List<TokenType> { TokenType.IDENTIFIER };
             if (Match(operators))
             {
+                Token var = Previous();
+                operators = new List<TokenType> { TokenType.PLUS_PLUS, TokenType.MINUS_MINUS };
+                if (Match(operators))
+                {
+                    return PostOper(var);
+                }
                 return new Variable<T>(Previous());
             }
             operators = new List<TokenType> { TokenType.LEFT_PAREN };
@@ -232,8 +251,27 @@ namespace Odin
                 Consume(TokenType.RIGHT_PAREN, "Expected ')' after expression.");
                 return new Grouping<T>(expr);
             }
+            operators = new List<TokenType> { TokenType.PLUS_PLUS, TokenType.MINUS_MINUS };
+            if (Match(operators))
+            {
+                return PreOper();
+            }
             ThrowError(Peek(), "Expected expression.");
-            return null!;
+            return new Literal<T>(null!);
+        }
+
+        private Expr<T> PostOper(Token var)
+        {
+            Expr<T> Expre = new PostOper<T>(new Variable<T>(var), Previous());
+            return Expre;
+        }
+
+        private Expr<T> PreOper()
+        {
+            Token oper = Previous();
+            Consume(TokenType.IDENTIFIER, $"Expected IDENTIFIER after '{oper._lexeme}'.");
+            Expr<T> Expre = new PreOper<T>(oper, new Variable<T>(Previous()));
+            return Expre;
         }
 
         private bool Match(List<TokenType> operators)
@@ -267,12 +305,16 @@ namespace Odin
 
         private Token Previous() => _tokens[_current - 1];
 
-        private Token Consume(TokenType type, string message)
+        private bool Consume(TokenType type, string message)
         {
-            if (Check(type)) return Advance();
-            ThrowError(Previous(), message);
+            if (Check(type))
+            {
+                Advance();
+                return true;
+            }
+            ThrowError(Peek(), message);
             Synchronize();
-            return null!;
+            return false;
         }
 
         private void ThrowError(Token token, string message)
@@ -287,7 +329,7 @@ namespace Odin
             Dictionary<string, TokenType> StatementBeginning = tokenDictionary.StatementBeginning;
             while (!IsAtEnd())
             {
-                if (Previous()._type == TokenType.SEMICOLON || StatementBeginning.ContainsValue(Peek()._type)) return;
+                if (Previous()._type == TokenType.SEMICOLON || StatementBeginning.ContainsValue(Peek()._type) || Peek()._type == TokenType.IDENTIFIER) return;
                 Advance();
             }
         }

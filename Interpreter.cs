@@ -33,6 +33,11 @@ namespace Odin
         public object VisitUnaryExpr(Unary<object> expr)
         {
             object right = Evaluate(expr._right);
+            if (right == null)
+            {
+                ThrowError(expr._oper, "Operand can't be null.");
+                return null!;
+            }
             switch (expr._oper._type)
             {
                 case TokenType.NOT: return !IsTrue(right);
@@ -44,7 +49,13 @@ namespace Odin
         public object VisitBinaryExpr(Binary<object> expr)
         {
             object left = Evaluate(expr._left);
+            //WriteLine("WEON");
             object right = Evaluate(expr._right);
+            if (left == null || right == null)
+            {
+                ThrowError(expr._oper, "Operands can't be null.");
+                return null!;
+            }
             bool band;
             long l, r;
             switch (expr._oper._type)
@@ -192,15 +203,94 @@ namespace Odin
         public object VisitVarStmt(Var<object> stmt)
         {
             object value = null!;
-            if (stmt._initializer != null)
+            if (stmt._initializer == null)
             {
-                value = Evaluate(stmt._initializer);
+                environment.Define(stmt._name._lexeme, value);
+                return value;
             }
+            TokenType type = stmt._type._type;
+            switch (stmt._type._type)
+            {
+                case TokenType.AT_EQUAL:
+                    type = TokenType.AT;
+                    break;
+                case TokenType.STAR_EQUAL:
+                    type = TokenType.STAR;
+                    break;
+                case TokenType.PLUS_EQUAL:
+                    type = TokenType.PLUS;
+                    break;
+                case TokenType.MINUS_EQUAL:
+                    type = TokenType.MINUS;
+                    break;
+                case TokenType.SLASH_EQUAL:
+                    type = TokenType.SLASH;
+                    break;
+                case TokenType.MOD_EQUAL:
+                    type = TokenType.MOD;
+                    break;
+                case TokenType.AND_EQUAL:
+                    type = TokenType.AND;
+                    break;
+                case TokenType.OR_EQUAL:
+                    type = TokenType.OR;
+                    break;
+                case TokenType.XOR_EQUAL:
+                    type = TokenType.XOR;
+                    break;
+                case TokenType.EXP_EQUAL:
+                    type = TokenType.EXP;
+                    break;
+                case TokenType.LEFT_SHIFT_EQUAL:
+                    type = TokenType.LEFT_SHIFT;
+                    break;
+                case TokenType.RIGHT_SHIFT_EQUAL:
+                    type = TokenType.RIGHT_SHIFT;
+                    break;
+                case TokenType.AT_AT_EQUAL:
+                    type = TokenType.AT_AT;
+                    break;
+            }
+            Token token = stmt._type;
+            token._type = type;
+            if (type == TokenType.EQUAL) value = Evaluate(stmt._initializer);
+            else if (type != stmt._type._type) value = null!;
+            else value = Evaluate(new Binary<object>(new Variable<object>(stmt._name), token, stmt._initializer));
             environment.Define(stmt._name._lexeme, value);
             return value;
         }
 
         public object VisitVariableExpr(Variable<object> expr) => environment.Get(expr._name);
+
+        public object VisitPostOperExpr(PostOper<object> postOper)
+        {
+            object value = environment.Get(postOper._var._name);
+            if(!(value is long))
+            {
+                ThrowError(postOper._var._name, $"The variable '{postOper._var._name._lexeme}' must contain an integer value.");
+                return null!;
+            }
+            long Value = (long)value;
+            if (postOper._type._type == TokenType.PLUS_PLUS) Value++;
+            else Value--;
+            environment.Define(postOper._var._name._lexeme, Value);
+            return (long)value;
+        }
+
+        public object VisitPreOperExpr(PreOper<object> postOper)
+        {
+            object value = environment.Get(postOper._var._name);
+            if (!(value is long))
+            {
+                ThrowError(postOper._var._name, $"The variable '{postOper._var._name._lexeme}' must contain an integer value.");
+                return null!;
+            }
+            long Value = (long)value;
+            if (postOper._type._type == TokenType.PLUS_PLUS) Value++;
+            else Value--;
+            environment.Define(postOper._var._name._lexeme, Value);
+            return Value;
+        }
 
         public object VisitBlockStmt(Block<object> stmt)
         {

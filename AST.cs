@@ -73,6 +73,32 @@ namespace Odin
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitVariableExpr(this);
     }
 
+    internal class PostOper<T> : Expr<T>
+    {
+        internal Variable<T> _var;
+        internal Token _type;
+        internal PostOper(Variable<T> var, Token type)
+        {
+            _var = var;
+            _type = type;
+        }
+
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitPostOperExpr(this);
+    }
+
+    internal class PreOper<T> : Expr<T>
+    {
+        internal Token _type;
+        internal Variable<T> _var;
+        internal PreOper(Token type, Variable<T> var)
+        {
+            _type = type;
+            _var= var;
+        }
+
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitPreOperExpr(this);
+    }
+
     internal abstract class Stmt<T>
     {
         internal abstract T Accept(IVisitor<T> visitor);
@@ -92,10 +118,12 @@ namespace Odin
     internal class Var<T> : Stmt<T>
     {
         internal Token _name;
+        internal Token _type;
         internal Expr<T> _initializer;
-        internal Var(Token name, Expr<T> initializer)
+        internal Var(Token name, Token type,Expr<T> initializer)
         {
             _name = name;
+            _type = type;
             _initializer = initializer;
         }
 
