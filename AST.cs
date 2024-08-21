@@ -407,10 +407,14 @@ namespace Odin
 
     internal class Action<T> : Method<T>
     {
+        Token _targets;
+        Token _context;
         internal List<Stmt<T>> _stmts;
 
-        internal Action(List<Stmt<T>> stmts)
+        internal Action(Token targets, Token context, List<Stmt<T>> stmts)
         {
+            _targets = targets;
+            _context = context;
             _stmts = stmts;
         }
 
