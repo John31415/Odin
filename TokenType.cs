@@ -17,6 +17,7 @@ namespace Odin
 
             StatementBeginning["Action"] = TokenType.ACTION;//
             StatementBeginning["Bool"] = TokenType.BOOL;//
+            StatementBeginning["Effect"] = TokenType.EFFECT;//
             StatementBeginning["Faction"] = TokenType.FACTION;//
             StatementBeginning["Name"] = TokenType.NAME;//
             StatementBeginning["OnActivation"] = TokenType.ON_ACTIVATION;//
@@ -30,8 +31,10 @@ namespace Odin
             StatementBeginning["Source"] = TokenType.SOURCE;//
             StatementBeginning["Type"] = TokenType.TYPE;//
             StatementBeginning["card"] = TokenType.CLASS_CARD;//
+            StatementBeginning["context"] = TokenType.CONTEXT;//
             StatementBeginning["effect"] = TokenType.CLASS_EFFECT;//
             StatementBeginning["for"] = TokenType.FOR;//
+            StatementBeginning["targets"] = TokenType.TARGETS;//
             StatementBeginning["while"] = TokenType.WHILE;//
 
             Keywords = StatementBeginning;
@@ -148,6 +151,9 @@ namespace Odin
 
         CLASS_EFFECT, // effect
         CLASS_CARD, // card
+        CONTEXT, // context
+        EFFECT, // Effect
+        TARGETS, // targets
         NAME, // Name
         PARAMS, // Params
         AMOUNT, // Amount
