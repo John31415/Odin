@@ -55,7 +55,7 @@ namespace Odin
 
         private void ThrowError(Token token, string message)
         {
-            ErrorReporter.ThrowError(message, token._line, token._position, token._lineBeginning);
+            ErrorReporter.ThrowError(message, token);
         }
     }
 }

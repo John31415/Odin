@@ -26,7 +26,8 @@ namespace Odin
                 column--;
             }
             error += "^-- Here.\n";
-            WriteLine(error);
+            //WriteLine(error);
+            Run.Errors += error;
         }
 
         private static void Error(int line, int column, string errorLine, string message)
@@ -44,6 +45,12 @@ namespace Odin
 
         internal static void ThrowError(string message, int line, int current, int lineBeginning)
         {
+            Error(line, current - lineBeginning - 1, ErrorLine(current, lineBeginning), message);
+        }
+
+        internal static void ThrowError(string message, Token token)
+        {
+            int line = token._line, current = token._position, lineBeginning = token._lineBeginning;
             Error(line, current - lineBeginning - 1, ErrorLine(current, lineBeginning), message);
         }
     }
