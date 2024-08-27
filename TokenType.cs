@@ -15,57 +15,56 @@ namespace Odin
             Keywords = new Dictionary<string, TokenType>();
             StatementBeginning = new Dictionary<string, TokenType>();
 
-            StatementBeginning["Action"] = TokenType.ACTION;//
-            StatementBeginning["Bool"] = TokenType.BOOL;//
-            StatementBeginning["Effect"] = TokenType.EFFECT;//
+            Keywords["Action"] = StatementBeginning["Action"] = TokenType.ACTION;//
+            Keywords["Bool"] = StatementBeginning["Bool"] = TokenType.BOOL;//
+            Keywords["Effect"] = StatementBeginning["Effect"] = TokenType.EFFECT;//
+            Keywords["OnActivation"] = StatementBeginning["OnActivation"] = TokenType.ON_ACTIVATION;//
+            Keywords["Params"] = StatementBeginning["Params"] = TokenType.PARAMS;//
+            Keywords["PostAction"] = StatementBeginning["PostAction"] = TokenType.POST_ACTION;//
+            Keywords["Predicate"] = StatementBeginning["Predicate"] = TokenType.PREDICATE;//
+            Keywords["Selector"] = StatementBeginning["Selector"] = TokenType.SELECTOR;//
+            Keywords["Single"] = StatementBeginning["Single"] = TokenType.SINGLE;//
+            Keywords["Source"] = StatementBeginning["Source"] = TokenType.SOURCE;//
+            Keywords["card"] = StatementBeginning["card"] = TokenType.CLASS_CARD;//
+            Keywords["effect"] = StatementBeginning["effect"] = TokenType.CLASS_EFFECT;//
+            Keywords["for"] = StatementBeginning["for"] = TokenType.FOR;//
+            Keywords["while"] = StatementBeginning["while"] = TokenType.WHILE;//
             StatementBeginning["Faction"] = TokenType.FACTION;//
             StatementBeginning["Name"] = TokenType.NAME;//
-            StatementBeginning["OnActivation"] = TokenType.ON_ACTIVATION;//
-            StatementBeginning["Params"] = TokenType.PARAMS;//
-            StatementBeginning["PostAction"] = TokenType.POST_ACTION;//
             StatementBeginning["Power"] = TokenType.POWER;//
-            StatementBeginning["Predicate"] = TokenType.PREDICATE;//
             StatementBeginning["Range"] = TokenType.RANGE;//
-            StatementBeginning["Selector"] = TokenType.SELECTOR;//
-            StatementBeginning["Single"] = TokenType.SINGLE;//
-            StatementBeginning["Source"] = TokenType.SOURCE;//
             StatementBeginning["Type"] = TokenType.TYPE;//
-            StatementBeginning["card"] = TokenType.CLASS_CARD;//
-            StatementBeginning["effect"] = TokenType.CLASS_EFFECT;//
-            StatementBeginning["for"] = TokenType.FOR;//
-            StatementBeginning["while"] = TokenType.WHILE;//
 
-            Keywords = StatementBeginning;
-
-            Keywords["Board"] = TokenType.BOARD;
-            Keywords["Deck"] = TokenType.DECK;
-            Keywords["DeckOfPlayer"] = TokenType.DECK_OF_PLAYER;
-            Keywords["Field"] = TokenType.FIELD;
-            Keywords["FieldOfPlayer"] = TokenType.FIELD_OF_PLAYER;
-            Keywords["Find"] = TokenType.FIND;
-            Keywords["Graveyard"] = TokenType.GRAVEYARD;
-            Keywords["GraveyardOfPlayer"] = TokenType.GRAVEYARD_OF_PLAYER;
-            Keywords["Hand"] = TokenType.HAND;
-            Keywords["HandOfPlayer"] = TokenType.HAND_OF_PLAYER;
+            //Keywords["Board"] = TokenType.BOARD;
+            //Keywords["Deck"] = TokenType.DECK;
+            //Keywords["DeckOfPlayer"] = TokenType.DECK_OF_PLAYER;
+            //Keywords["Field"] = TokenType.FIELD;
+            //Keywords["FieldOfPlayer"] = TokenType.FIELD_OF_PLAYER;
+            //Keywords["Find"] = TokenType.FIND;
+            //Keywords["Graveyard"] = TokenType.GRAVEYARD;
+            //Keywords["GraveyardOfPlayer"] = TokenType.GRAVEYARD_OF_PLAYER;
+            //Keywords["Hand"] = TokenType.HAND;
+            //Keywords["HandOfPlayer"] = TokenType.HAND_OF_PLAYER;
             Keywords["Number"] = TokenType.NUMBER;
-            Keywords["Owner"] = TokenType.OWNER;
-            Keywords["Pop"] = TokenType.POP;
-            Keywords["Push"] = TokenType.PUSH;
-            Keywords["Remove"] = TokenType.REMOVE;
-            Keywords["SendBottom"] = TokenType.SEND_BOTTOM;
-            Keywords["Shuffle"] = TokenType.SHUFFLE;
+            //Keywords["Owner"] = TokenType.OWNER;
+            //Keywords["Pop"] = TokenType.POP;
+            //Keywords["Push"] = TokenType.PUSH;
+            //Keywords["Remove"] = TokenType.REMOVE;
+            //Keywords["SendBottom"] = TokenType.SEND_BOTTOM;
+            //Keywords["Shuffle"] = TokenType.SHUFFLE;
             Keywords["String"] = TokenType.STRING;
-            Keywords["TriggerPlayer"] = TokenType.TRIGGER_PLAYER;
-            Keywords["deck"] = TokenType.S_DECK;
+            //Keywords["TriggerPlayer"] = TokenType.TRIGGER_PLAYER;
+            //Keywords["deck"] = TokenType.S_DECK;
             Keywords["false"] = TokenType.FALSE;
-            Keywords["field"] = TokenType.S_FIELD;
-            Keywords["hand"] = TokenType.S_HAND;
+            //Keywords["field"] = TokenType.S_FIELD;
+            //Keywords["hand"] = TokenType.S_HAND;
             Keywords["in"] = TokenType.IN;
-            Keywords["otherDeck"] = TokenType.S_OTHER_DECK;
-            Keywords["otherField"] = TokenType.S_OTHER_FIELD;
-            Keywords["otherHand"] = TokenType.S_OTHER_HAND;
-            Keywords["parent"] = TokenType.S_PARENT;
+            //Keywords["otherDeck"] = TokenType.S_OTHER_DECK;
+            //Keywords["otherField"] = TokenType.S_OTHER_FIELD;
+            //Keywords["otherHand"] = TokenType.S_OTHER_HAND;
+            //Keywords["parent"] = TokenType.S_PARENT;
             Keywords["true"] = TokenType.TRUE;
+
         }
     }
 
@@ -154,23 +153,23 @@ namespace Odin
         PARAMS, // Params
         AMOUNT, // Amount
         ACTION, // Action
-        TRIGGER_PLAYER, // TriggerPlayer
-        BOARD, // Board
-        HAND_OF_PLAYER, // HandOfPlayer
-        HAND, // Hand
-        FIELD_OF_PLAYER, // FieldOfPlayer
-        FIELD, // Field
-        GRAVEYARD_OF_PLAYER, // GraveyardOfPlayer
-        GRAVEYARD, // Graveyard
-        DECK_OF_PLAYER, // DeckOfPlayer
-        DECK, // Deck
-        OWNER, // Owner
-        FIND, // Find
-        PUSH, // Push
-        SEND_BOTTOM, // SendBottom
-        POP, // Pop
-        REMOVE, // Remove
-        SHUFFLE, // Shuffle
+        //TRIGGER_PLAYER, // TriggerPlayer
+        //BOARD, // Board
+        //HAND_OF_PLAYER, // HandOfPlayer
+        //HAND, // Hand
+        //FIELD_OF_PLAYER, // FieldOfPlayer
+        //FIELD, // Field
+        //GRAVEYARD_OF_PLAYER, // GraveyardOfPlayer
+        //GRAVEYARD, // Graveyard
+        //DECK_OF_PLAYER, // DeckOfPlayer
+        //DECK, // Deck
+        //OWNER, // Owner
+        //FIND, // Find
+        //PUSH, // Push
+        //SEND_BOTTOM, // SendBottom
+        //POP, // Pop
+        //REMOVE, // Remove
+        //SHUFFLE, // Shuffle
         TYPE, // Type
         FACTION, // Faction
         POWER, // Power
@@ -188,13 +187,13 @@ namespace Odin
         IN, // in
         WHILE, // while
 
-        S_HAND, // hand
-        S_OTHER_HAND, // otherHand
-        S_DECK, // deck
-        S_OTHER_DECK, // otherDeck
-        S_FIELD, // field
-        S_OTHER_FIELD, // otherField
-        S_PARENT, // parent
+        //S_HAND, // hand
+        //S_OTHER_HAND, // otherHand
+        //S_DECK, // deck
+        //S_OTHER_DECK, // otherDeck
+        //S_FIELD, // field
+        //S_OTHER_FIELD, // otherField
+        //S_PARENT, // parent
 
         #endregion
 

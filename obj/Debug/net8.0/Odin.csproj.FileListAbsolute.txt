@@ -12,9 +12,7 @@ C:\Users\John Mauris Lopez R\Desktop\PP\Odin\obj\Debug\net8.0\refint\Odin.dll
 C:\Users\John Mauris Lopez R\Desktop\PP\Odin\obj\Debug\net8.0\Odin.pdb
 C:\Users\John Mauris Lopez R\Desktop\PP\Odin\obj\Debug\net8.0\Odin.genruntimeconfig.cache
 C:\Users\John Mauris Lopez R\Desktop\PP\Odin\obj\Debug\net8.0\ref\Odin.dll
-D:\Odin\GitHub\Odin\bin\Debug\net8.0\Odin.exe
 D:\Odin\GitHub\Odin\bin\Debug\net8.0\Odin.deps.json
-D:\Odin\GitHub\Odin\bin\Debug\net8.0\Odin.runtimeconfig.json
 D:\Odin\GitHub\Odin\bin\Debug\net8.0\Odin.dll
 D:\Odin\GitHub\Odin\bin\Debug\net8.0\Odin.pdb
 D:\Odin\GitHub\Odin\obj\Debug\net8.0\Odin.GeneratedMSBuildEditorConfig.editorconfig
@@ -25,5 +23,7 @@ D:\Odin\GitHub\Odin\obj\Debug\net8.0\Odin.sourcelink.json
 D:\Odin\GitHub\Odin\obj\Debug\net8.0\Odin.dll
 D:\Odin\GitHub\Odin\obj\Debug\net8.0\refint\Odin.dll
 D:\Odin\GitHub\Odin\obj\Debug\net8.0\Odin.pdb
-D:\Odin\GitHub\Odin\obj\Debug\net8.0\Odin.genruntimeconfig.cache
 D:\Odin\GitHub\Odin\obj\Debug\net8.0\ref\Odin.dll
+D:\Odin\GitHub\Odin\bin\Debug\net8.0\Odin.exe
+D:\Odin\GitHub\Odin\bin\Debug\net8.0\Odin.runtimeconfig.json
+D:\Odin\GitHub\Odin\obj\Debug\net8.0\Odin.genruntimeconfig.cache
