@@ -11,13 +11,28 @@ namespace Odin
 {
     internal class Interpreter : IVisitor<object>
     {
+        internal Environment globals = new Environment();
         private Environment environment = new Environment();
+        private GameState gameState;
+        private Lists lastList;
+        private Card lastCard;
+        private string auxForItemName;
+        private Card auxForItemValue;
+
+        internal Interpreter(GameState _gameState)
+        {
+            gameState = _gameState;
+            environment = globals;
+            globals.Define("rand", new Rand());
+            globals.Define("log", new Log());
+            globals.Define("context", new Context(gameState));
+        }
 
         public void Interpret(List<Stmt<object>> statements)
         {
             foreach (Stmt<object> stmt in statements)
             {
-                WriteLine(Execute(stmt));
+                Execute(stmt);
             }
         }
 
@@ -49,7 +64,6 @@ namespace Odin
         public object VisitBinaryExpr(Binary<object> expr)
         {
             object left = Evaluate(expr._left);
-            //WriteLine("WEON");
             object right = Evaluate(expr._right);
             if (left == null || right == null)
             {
@@ -195,6 +209,75 @@ namespace Odin
             return null!;
         }
 
+        public object VisitCallExpr(Call<object> expr)
+        {
+            object callee = Evaluate(expr._callee);
+            Lists auxList = lastList;
+            List<object> arguments = new List<object>();
+            foreach (var arg in expr._arguments)
+            {
+                arguments.Add(Evaluate(arg));
+            }
+            if (!(callee is ICallable))
+            {
+                ThrowError(expr._paren, "Can only call functions.");
+                return null!;
+            }
+            ICallable function = (ICallable)callee;
+            if (arguments.Count != function.Arity())
+            {
+                ThrowError(expr._paren, $"Expected {function.Arity()} arguments but got {arguments.Count}.");
+                return null!;
+            }
+            arguments.Add(auxList);//provisional
+            return function.Call(gameState, this, arguments, expr._paren);
+        }
+
+        public object VisitGetExpr(Get<object> expr)
+        {
+            object obj = Evaluate(expr._obj);
+            if (!(obj is IClass))
+            {
+                ThrowError(expr._name, "This must be an IClass.");
+                return null!;
+            }
+            if (((IClass)obj).properties.ContainsKey(expr._name._lexeme))
+            {
+                if (obj is Lists) lastList = (Lists)obj;
+                else lastList = null!;
+                if (obj is Card) lastCard = (Card)obj;
+                else lastCard = null!;
+                return ((IClass)obj).properties[expr._name._lexeme];
+            }
+            ThrowError(expr._name, "This is not a property or a method.");
+            return null!;
+        }
+
+        public object VisitSetExpr(Set<object> expr)
+        {
+            object obj = Evaluate(expr._obj);
+            if (lastCard == null!)
+            {
+                ThrowError(expr._name, "Arithmetic operations can only be aplaied to 'Card'.");
+                return null!;
+            }
+            Card auxCard = lastCard;
+            if (!auxCard.properties.ContainsKey(expr._name._lexeme))
+            {
+                ThrowError(expr._name, "This is not a property or a method.");
+                return null!;
+            }
+            object value = null!;
+            TokenType type = OperConverter(expr._oper._type);
+            Token token = expr._oper;
+            token._type = type;
+            if (type == TokenType.EQUAL) value = Evaluate(expr._value);
+            else if (type != expr._oper._type) value = null!;
+            else value = Evaluate(new Binary<object>(new Literal<object>(obj), token, new Literal<object>(Evaluate(expr._value))));
+            auxCard.Set(expr._name._lexeme, value);
+            return null!;
+        }
+
         public object VisitExpressionStmt(Expression<object> stmt)
         {
             return Evaluate(stmt._expression);
@@ -208,49 +291,7 @@ namespace Odin
                 environment.Define(stmt._name._lexeme, value);
                 return value;
             }
-            TokenType type = stmt._type._type;
-            switch (stmt._type._type)
-            {
-                case TokenType.AT_EQUAL:
-                    type = TokenType.AT;
-                    break;
-                case TokenType.STAR_EQUAL:
-                    type = TokenType.STAR;
-                    break;
-                case TokenType.PLUS_EQUAL:
-                    type = TokenType.PLUS;
-                    break;
-                case TokenType.MINUS_EQUAL:
-                    type = TokenType.MINUS;
-                    break;
-                case TokenType.SLASH_EQUAL:
-                    type = TokenType.SLASH;
-                    break;
-                case TokenType.MOD_EQUAL:
-                    type = TokenType.MOD;
-                    break;
-                case TokenType.AND_EQUAL:
-                    type = TokenType.AND;
-                    break;
-                case TokenType.OR_EQUAL:
-                    type = TokenType.OR;
-                    break;
-                case TokenType.XOR_EQUAL:
-                    type = TokenType.XOR;
-                    break;
-                case TokenType.EXP_EQUAL:
-                    type = TokenType.EXP;
-                    break;
-                case TokenType.LEFT_SHIFT_EQUAL:
-                    type = TokenType.LEFT_SHIFT;
-                    break;
-                case TokenType.RIGHT_SHIFT_EQUAL:
-                    type = TokenType.RIGHT_SHIFT;
-                    break;
-                case TokenType.AT_AT_EQUAL:
-                    type = TokenType.AT_AT;
-                    break;
-            }
+            TokenType type = OperConverter(stmt._type._type);
             Token token = stmt._type;
             token._type = type;
             if (type == TokenType.EQUAL) value = Evaluate(stmt._initializer);
@@ -264,31 +305,51 @@ namespace Odin
 
         public object VisitPostOperExpr(PostOper<object> postOper)
         {
-            object value = environment.Get(postOper._var._name);
-            if(!(value is long))
+            object value = Evaluate(postOper._var);
+            Card auxCard = lastCard;
+            if (!(value is long))
             {
-                ThrowError(postOper._var._name, $"The variable '{postOper._var._name._lexeme}' must contain an integer value.");
+                ThrowError(postOper._type, $"The object must contain an integer value.");
                 return null!;
             }
             long Value = (long)value;
             if (postOper._type._type == TokenType.PLUS_PLUS) Value++;
             else Value--;
-            environment.Define(postOper._var._name._lexeme, Value);
+            if (postOper._var is Variable<object>) environment.Define(((Variable<object>)postOper._var)._name._lexeme, Value);
+            else
+            {
+                if (auxCard == null!)
+                {
+                    ThrowError(postOper._type, "The operation can only be aplied to integer variables and Card properties.");
+                    return null!;
+                }
+                auxCard.Set(((Get<object>)postOper._var)._name._lexeme, Value);
+            }
             return (long)value;
         }
 
-        public object VisitPreOperExpr(PreOper<object> postOper)
+        public object VisitPreOperExpr(PreOper<object> preOper)
         {
-            object value = environment.Get(postOper._var._name);
+            object value = Evaluate(preOper._var);
+            Card auxCard = lastCard;
             if (!(value is long))
             {
-                ThrowError(postOper._var._name, $"The variable '{postOper._var._name._lexeme}' must contain an integer value.");
+                ThrowError(preOper._type, $"The object must contain an integer value.");
                 return null!;
             }
             long Value = (long)value;
-            if (postOper._type._type == TokenType.PLUS_PLUS) Value++;
+            if (preOper._type._type == TokenType.PLUS_PLUS) Value++;
             else Value--;
-            environment.Define(postOper._var._name._lexeme, Value);
+            if (preOper._var is Variable<object>) environment.Define(((Variable<object>)preOper._var)._name._lexeme, Value);
+            else
+            {
+                if (auxCard == null!)
+                {
+                    ThrowError(preOper._type, "The operation can only be aplied to integer variables and Card properties.");
+                    return null!;
+                }
+                auxCard.Set(((Get<object>)preOper._var)._name._lexeme, Value);
+            }
             return Value;
         }
 
@@ -302,20 +363,38 @@ namespace Odin
         {
             while (IsTrue(Evaluate(stmt._condition)))
             {
-                //Execute(stmt._body);
-                WriteLine(Execute(stmt._body));
+                Execute(stmt._body);
             }
             return null!;
         }
 
-        private void ExecuteBlock(List<Stmt<object>> statements, Environment environment)
+        public object VisitForStmt(For<object> stmt)
+        {
+            object list = Evaluate(stmt._list);
+            if (!(list is Lists))
+            {
+                ThrowError(stmt._iter, "Expected list for this iterator.");
+                return null!;
+            }
+            auxForItemName = stmt._iter._lexeme;
+            foreach (var item in ((Lists)list).Cards)
+            {
+                auxForItemValue = item;
+                Execute(stmt._body);
+                auxForItemValue = null!;
+            }
+            auxForItemName = null!;
+            return null!;
+        }
+
+        internal void ExecuteBlock(List<Stmt<object>> statements, Environment environment)
         {
             Environment previous = this.environment;
+            if (auxForItemName != null!) environment.Define(auxForItemName, auxForItemValue);
             this.environment = environment;
             foreach (Stmt<object> stmt in statements)
             {
-                //Execute(stmt);
-                WriteLine(Execute(stmt));
+                Execute(stmt);
             }
             this.environment = previous;
         }
@@ -388,9 +467,45 @@ namespace Odin
 
         private int Compare(object a, object b) => (a is long) ? ((long)a).CompareTo((long)b) : ((string)a).CompareTo((string)b);
 
+        private TokenType OperConverter(TokenType tokenType)
+        {
+            switch (tokenType)
+            {
+                case TokenType.AT_EQUAL:
+                    return TokenType.AT;
+                case TokenType.STAR_EQUAL:
+                    return TokenType.STAR;
+                case TokenType.PLUS_EQUAL:
+                    return TokenType.PLUS;
+                case TokenType.MINUS_EQUAL:
+                    return TokenType.MINUS;
+                case TokenType.SLASH_EQUAL:
+                    return TokenType.SLASH;
+                case TokenType.MOD_EQUAL:
+                    return TokenType.MOD;
+                case TokenType.AND_EQUAL:
+                    return TokenType.AND;
+                case TokenType.OR_EQUAL:
+                    return TokenType.OR;
+                case TokenType.XOR_EQUAL:
+                    return TokenType.XOR;
+                case TokenType.EXP_EQUAL:
+                    return TokenType.EXP;
+                case TokenType.LEFT_SHIFT_EQUAL:
+                    return TokenType.LEFT_SHIFT;
+                case TokenType.RIGHT_SHIFT_EQUAL:
+                    return TokenType.RIGHT_SHIFT;
+                case TokenType.AT_AT_EQUAL:
+                    return TokenType.AT_AT;
+                case TokenType.EQUAL:
+                    return TokenType.EQUAL;
+            }
+            return tokenType;
+        }
+
         private void ThrowError(Token token, string message)
         {
-            ErrorReporter.ThrowError(message, token._line, token._position, token._lineBeginning);
+            ErrorReporter.ThrowError(message, token);
         }
     }
 }

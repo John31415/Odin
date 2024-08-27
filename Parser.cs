@@ -20,16 +20,16 @@ namespace Odin
             _tokens = tokens;
         }
 
-        internal List<Class<T>> Parse()
+        internal List<Stmt<T>> Parse()
         {
-            List<Class<T>> classes = new List<Class<T>>();
+            List<Stmt<T>> classes = new List<Stmt<T>>();
             while (!IsAtEnd())
             {
-                classes.Add(Class());
+                classes.Add(Declaration());
             }
             return classes;
         }
-
+        /*
         private Class<T> Class()
         {
             if (Check(TokenType.CLASS_CARD))
@@ -85,13 +85,12 @@ namespace Odin
             if (!Consume(TokenType.PARAMS, "Expected 'Params' declaration.")) return null!;
             if (!Consume(TokenType.COLON, "Expected ':' after 'Params' declaration.")) return null!;
             if (!Consume(TokenType.LEFT_CURLY, "Expected '{'.")) return null!;
-            List<Prop<T>> _params = new List<Prop<T>> { ParamDecl() };
-            List<TokenType> aux = new List<TokenType> { TokenType.RIGHT_CURLY };
-            while(!Match(aux) && !IsAtEnd())
+            List<Prop<T>> _params = new List<Prop<T>>();
+            do
             {
-                if (!Consume(TokenType.COMMA, "Expected ','.")) return null!;
                 _params.Add(ParamDecl());
-            }
+            } while (Match(TokenType.COMMA));
+            if (!Consume(TokenType.COMMA, "Expected '}' after parameters.")) return null!;
             return new Params<T>(_params);
         }
 
@@ -124,11 +123,10 @@ namespace Odin
             if (!Consume(TokenType.LAMBDA, "Expected \"=>\".")) return null!;
             if (!Consume(TokenType.LEFT_CURLY, "Expected '{'.")) return null!;
             List<Stmt<T>> stmts = new List<Stmt<T>>();
-            List<TokenType> aux = new List<TokenType> { TokenType.RIGHT_CURLY };
-            while (!Match(aux) && !IsAtEnd())
+            do
             {
                 stmts.Add(Declaration());
-            }
+            } while (!Match(TokenType.RIGHT_CURLY));
             return new Action<T>(targets, context, stmts);
         }
 
@@ -137,15 +135,13 @@ namespace Odin
             if (!Consume(TokenType.ON_ACTIVATION, "Expected 'OnActivation' declaration.")) return null!;
             if (!Consume(TokenType.COLON, "Expected ':' after 'OnActivation'.")) return null!;
             if (!Consume(TokenType.LEFT_BRACE, "Expected '['.")) return null!;
-            List<TokenType> aux = new List<TokenType> { TokenType.RIGHT_BRACE };
-            if (Match(aux)) return null!;
-            List<Method<T>> onActBodies = new List<Method<T>> { OnActBody() };
-            while (!IsAtEnd())
+            if (Match(TokenType.RIGHT_BRACE)) return null!;
+            List<Method<T>> onActBodies = new List<Method<T>>();
+            do
             {
-                if (Match(aux)) break;
-                if (!Consume(TokenType.COMMA, "Expected ','.")) return null!;
                 onActBodies.Add(OnActBody());
-            }
+            } while (Match(TokenType.COMMA));
+            if (!Consume(TokenType.RIGHT_BRACE, "Expected ']'.")) return null!;
             return new OnActivation<T>(onActBodies);
         }
 
@@ -153,15 +149,13 @@ namespace Odin
         {
             if (!Consume(TokenType.LEFT_CURLY, "Expected '{'.")) return null!;
             Method<T> effect = Effect();
-            List<TokenType> aux = new List<TokenType> { TokenType.RIGHT_CURLY };
-            if (Match(aux))
+            if (Match(TokenType.RIGHT_CURLY))
             {
                 return new OnActBody<T>(effect, null!, null!);
             }
-            if (!Consume(TokenType.COMMA, "Expected ','.")) return null!;
-            aux = new List<TokenType> { TokenType.POST_ACTION };
+            if (!Consume(TokenType.COMMA, "Expected ',' after 'Effect'.")) return null!;
             Method<T> postAction = null!;
-            if (Match(aux))
+            if (Match(TokenType.POST_ACTION))
             {
                 if (!Consume(TokenType.COLON, "Expected ':' after 'PostAction'.")) return null!;
                 postAction = OnActBody();
@@ -169,12 +163,11 @@ namespace Odin
                 return new OnActBody<T>(effect, null!, postAction);
             }
             Method<T> selector = Selector();
-            aux = new List<TokenType> { TokenType.RIGHT_CURLY };
-            if (Match(aux))
+            if (Match(TokenType.RIGHT_CURLY))
             {
                 return new OnActBody<T>(effect, selector, null!);
             }
-            if (!Consume(TokenType.COMMA, "Expected ','.")) return null!;
+            if (!Consume(TokenType.COMMA, "Expected ',' after 'Selector'.")) return null!;
             if (!Consume(TokenType.POST_ACTION, "Expected 'PostAction'.")) return null!;
             if (!Consume(TokenType.COLON, "Expected ':' after 'PostAction'.")) return null!;
             postAction = OnActBody();
@@ -184,23 +177,21 @@ namespace Odin
 
         private Method<T> Effect()
         {
-            if (!Consume(TokenType.EFFECT, "Expected 'Effect'.")) return null!;
+            if (!Consume(TokenType.EFFECT, "Expected 'Effect' declaration.")) return null!;
             Token effect = Previous();
-            if (!Consume(TokenType.COLON, "Expected ':'.")) return null!;
-            List<TokenType> curly = new List<TokenType> { TokenType.LEFT_CURLY };
-            if (!Match(curly))
+            if (!Consume(TokenType.COLON, "Expected ':' after 'Effect'.")) return null!;
+            if (!Match(TokenType.LEFT_CURLY))
             {
                 Expr<T> effectName = Expression();
                 return new Effect<T>(effect, effectName);
             }
             Prop<T> name = Name();
             List<Prop<T>> paramsv = new List<Prop<T>>();
-            curly = new List<TokenType> { TokenType.RIGHT_CURLY };
-            while (!Match(curly) && !IsAtEnd())
+            while (Match(TokenType.COMMA))
             {
-                if (!Consume(TokenType.COMMA, "Expected ',' after statement.")) return null!;
                 paramsv.Add(ParamValue());
             }
+            if (!Consume(TokenType.RIGHT_CURLY, "Expected '}'.")) return null!;
             return new Effect<T>(effect, name, paramsv);
         }
 
@@ -208,7 +199,7 @@ namespace Odin
         {
             if (!Consume(TokenType.SELECTOR, "Expected 'Selector' declaration.")) return null!;
             Token selector = Previous();
-            if (!Consume(TokenType.COLON, "Expected ':'.")) return null!;
+            if (!Consume(TokenType.COLON, "Expected ':' after 'Selector'.")) return null!;
             if (!Consume(TokenType.LEFT_CURLY, "Expected '{'.")) return null!;
             Prop<T> source = Source();
             if (!Consume(TokenType.COMMA, "Expected ',' after 'Source'.")) return null!;
@@ -222,15 +213,14 @@ namespace Odin
         {
             if (!Consume(TokenType.RANGE, "Expected 'Range' declaration.")) return null!;
             Token range = Previous();
-            if (!Consume(TokenType.COLON, "Expected ':'.")) return null!;
+            if (!Consume(TokenType.COLON, "Expected ':' after 'Range'.")) return null!;
             if (!Consume(TokenType.LEFT_BRACE, "Expected '['.")) return null!;
-            List<Expr<T>> list = new List<Expr<T>> { Expression() };
-            List<TokenType> aux = new List<TokenType> { TokenType.RIGHT_BRACE };
-            while (!Match(aux) && !IsAtEnd())
+            List<Expr<T>> list = new List<Expr<T>>();
+            do
             {
-                if (!Consume(TokenType.COMMA, "Expected ','.")) return null!;
                 list.Add(Expression());
-            }
+            } while (Match(TokenType.COMMA));
+            if (!Consume(TokenType.RIGHT_BRACE, "Expected ']'.")) return null!;
             return new Range<T>(range, list);
         }
 
@@ -238,7 +228,7 @@ namespace Odin
         {
             if (!Consume(TokenType.SOURCE, "Expected 'Source' declaration.")) return null!;
             Token source = Previous();
-            if (!Consume(TokenType.COLON, "Expected ':'.")) return null!;
+            if (!Consume(TokenType.COLON, "Expected ':' after 'Source'.")) return null!;
             Expr<T> value = Expression();
             return new Source<T>(source, value);
         }
@@ -247,30 +237,36 @@ namespace Odin
         {
             if (!Consume(TokenType.SINGLE, "Expected 'Single' declaration.")) return null!;
             Token single = Previous();
-            if (!Consume(TokenType.COLON, "Expected ':'.")) return null!;
+            if (!Consume(TokenType.COLON, "Expected ':' after 'Single'.")) return null!;
             Expr<T> value = Expression();
             return new Single<T>(single, value);
         }
 
-        private Prop<T> Predicate()
+        private Prop<T> Pred()
         {
-            if (!Consume(TokenType.PREDICATE, "Expected 'Predicate' declaration.")) return null!;
-            Token predicate = Previous();
-            if (!Consume(TokenType.COLON, "Expected ':'.")) return null!;
             if (!Consume(TokenType.LEFT_PAREN, "Expected '('.")) return null!;
             if (!Consume(TokenType.IDENTIFIER, "Expected identifier.")) return null!;
             Token card = Previous();
             if (!Consume(TokenType.RIGHT_PAREN, "Expected ')'.")) return null!;
             if (!Consume(TokenType.LAMBDA, "Expected \"=>\".")) return null!;
             Expr<T> condition = Expression();
-            return new Predicate<T>(predicate, card, condition);
+            return new Pred<T>(card, condition);
+        }
+
+        private Prop<T> Predicate()
+        {
+            if (!Consume(TokenType.PREDICATE, "Expected 'Predicate' declaration.")) return null!;
+            Token predicate = Previous();
+            if (!Consume(TokenType.COLON, "Expected ':' after 'Predicate'.")) return null!;
+            Prop<T> pred = Pred();
+            return new Predicate<T>(predicate, pred);
         }
 
         private Prop<T> Name()
         {
             if (!Consume(TokenType.NAME, "Expected 'Name' declaration.")) return null!;
             Token name = Previous();
-            if (!Consume(TokenType.COLON, "Expected ':'.")) return null!;
+            if (!Consume(TokenType.COLON, "Expected ':' after 'Name'.")) return null!;
             Expr<T> value = Expression();
             return new Name<T>(name, value);
         }
@@ -279,7 +275,7 @@ namespace Odin
         {
             if (!Consume(TokenType.TYPE, "Expected 'Type' declaration.")) return null!;
             Token type = Previous();
-            if (!Consume(TokenType.COLON, "Expected ':'.")) return null!;
+            if (!Consume(TokenType.COLON, "Expected ':' after 'Type'.")) return null!;
             Expr<T> value = Expression();
             return new Type<T>(type, value);
         }
@@ -288,7 +284,7 @@ namespace Odin
         {
             if (!Consume(TokenType.FACTION, "Expected 'Faction' declaration.")) return null!;
             Token faction = Previous();
-            if (!Consume(TokenType.COLON, "Expected ':'.")) return null!;
+            if (!Consume(TokenType.COLON, "Expected ':' after 'Faction'.")) return null!;
             Expr<T> value = Expression();
             return new Faction<T>(faction, value);
         }
@@ -297,7 +293,7 @@ namespace Odin
         {
             if (!Consume(TokenType.POWER, "Expected 'Power' declaration.")) return null!;
             Token power = Previous();
-            if (!Consume(TokenType.COLON, "Expected ':'.")) return null!;
+            if (!Consume(TokenType.COLON, "Expected ':' after 'Power'.")) return null!;
             Expr<T> value = Expression();
             return new Power<T>(power, value);
         }
@@ -306,15 +302,14 @@ namespace Odin
         {
             if (!Consume(TokenType.IDENTIFIER, "Expected parameter declaration.")) return null!;
             Token name = Previous();
-            if (!Consume(TokenType.COLON, "Expected ':'.")) return null!;
+            if (!Consume(TokenType.COLON, "Expected ':' after parameter name.")) return null!;
             Expr<T> value = Expression();
             return new ParamValue<T>(name, value);
         }
-
+        */
         private Stmt<T> Declaration()
         {
-            List<TokenType> identifier = new List<TokenType> { TokenType.IDENTIFIER };
-            if (Match(identifier))
+            if (Match(TokenType.IDENTIFIER))
             {
                 return VarDeclaration();
             }
@@ -330,10 +325,15 @@ namespace Odin
             Token oper = Peek();
             if (!Match(opers))
             {
-                if (oper._type == TokenType.PLUS_PLUS || oper._type == TokenType.MINUS_MINUS)
+                if (Check(TokenType.PLUS_PLUS) || Check(TokenType.MINUS_MINUS))
                 {
                     _current--;
                     return ExpressionStatement();
+                }
+                if (Check(TokenType.DOT))
+                {
+                    _current--;
+                    return new Expression<T>(CallMethods());
                 }
                 ThrowError(Peek(), "Only assignment, call, increment and decrement can be used as a statement.");
                 return new Var<T>(name, oper, new Literal<T>(null!));
@@ -343,14 +343,38 @@ namespace Odin
             return new Var<T>(name, oper, initializer);
         }
 
+        private Expr<T> CallMethods()
+        {
+            Expr<T> expr = Call();
+            if (Match(TokenType.SEMICOLON))
+            {
+                return expr;
+            }
+            if(!(expr is Get<T>) && !(expr is Variable<T>))
+            {
+                ThrowError(Peek(), "Invalid operation.");
+                return null!;
+            }
+            List<TokenType> opers = new List<TokenType> { TokenType.EQUAL, TokenType.AT_EQUAL, TokenType.STAR_EQUAL, TokenType.PLUS_EQUAL,
+                TokenType.MINUS_EQUAL, TokenType.SLASH_EQUAL, TokenType.MOD_EQUAL, TokenType.AND_EQUAL, TokenType.OR_EQUAL, TokenType.XOR_EQUAL,
+                TokenType.EXP_EQUAL, TokenType.LEFT_SHIFT_EQUAL, TokenType.RIGHT_SHIFT_EQUAL, TokenType.AT_AT_EQUAL };
+            Token name = Previous();
+            Token oper = Peek();
+            if (!Match(opers))
+            {
+                ThrowError(Peek(), "Invalid operation for properties or methods.");
+                return null!;
+            }
+            Expr<T> initializer = Expression();
+            Consume(TokenType.SEMICOLON, "Expected ';' after assignation.");
+            return new Set<T>(expr, name, oper, initializer);
+        }
+
         private Stmt<T> Statement()
         {
-            List<TokenType> curly = new List<TokenType> { TokenType.LEFT_CURLY };
-            if (Match(curly)) return new Block<T>(Block());
-            List<TokenType> While = new List<TokenType> { TokenType.WHILE };
-            if (Match(While)) return WhileStatement();
-            List<TokenType> For = new List<TokenType> { TokenType.FOR};
-            if (Match(For)) return ForStatement();
+            if (Match(TokenType.LEFT_CURLY)) return new Block<T>(Block());
+            if (Match(TokenType.WHILE)) return WhileStatement();
+            if (Match(TokenType.FOR)) return ForStatement();
             return ExpressionStatement();
         }
 
@@ -359,14 +383,8 @@ namespace Odin
             if (!Consume(TokenType.IDENTIFIER, "Expected 'identifier'.")) return null!;
             Token iter = Previous();
             if (!Consume(TokenType.IN, "Expected 'in' in 'for' declaration.")) return null!;
-            List<TokenType> aux = new List<TokenType> { TokenType.IDENTIFIER };
-            if (!Match(aux))
-            {
-                ThrowError(Previous(), "Expected list.");
-                return null!;
-            }
-            Token list = Previous();
-            Stmt<T> body = Statement();
+            Expr<T> list = Call();
+            Stmt<T> body = Declaration();
             return new For<T>(iter, list, body);
         }
 
@@ -375,7 +393,7 @@ namespace Odin
             if (!Consume(TokenType.LEFT_PAREN, "Expected '(' after 'while'.")) return null!;
             Expr<T> condition = Expression();
             if (!Consume(TokenType.RIGHT_PAREN, "Expected ')' after 'condition'.")) return null!;
-            Stmt<T> body = Statement();
+            Stmt<T> body = Declaration();
             return new While<T>(condition, body);
         }
 
@@ -513,28 +531,73 @@ namespace Odin
                 Expr<T> right = Unary();
                 return new Unary<T>(oper, right);
             }
-            return Primary();
+            return Call();
+        }
+
+        private Expr<T> Call()
+        {
+            Expr<T> expr = Primary();
+            while (true)
+            {
+                if (Match(TokenType.LEFT_PAREN))
+                {
+                    expr = FinishCall(expr);
+                }
+                else if (Match(TokenType.DOT))
+                {
+                    if (!Consume(TokenType.IDENTIFIER, "Expected property name after '.'.")) return null!;
+                    Token name = Previous();
+                    expr = new Get<T>(expr, name);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            List<TokenType> opers = new List<TokenType> { TokenType.PLUS_PLUS, TokenType.MINUS_MINUS };
+            if (Match(opers))
+            {
+                if(expr is Call<T>)
+                {
+                    ThrowError(((Call<T>)expr)._paren, "This operation can't be aplaied to methods.");
+                    return null!;
+                }
+                return new PostOper<T>(expr, Previous());
+            }
+            return expr;
+        }
+
+        private Expr<T> FinishCall(Expr<T> callee)
+        {
+            List<Expr<T>> arguments = new List<Expr<T>>();
+            if (!Check(TokenType.RIGHT_PAREN))
+            {
+                do
+                {
+                    arguments.Add(Expression());
+                } while (Match(TokenType.COMMA));
+            }
+            if (!Consume(TokenType.RIGHT_PAREN, "Expected ')' after arguments.")) return null!;
+            Token paren = Previous();
+            return new Call<T>(callee, paren, arguments);
         }
 
         private Expr<T> Primary()
         {
-            List<TokenType> operators = new List<TokenType> { TokenType.FALSE };
-            if (Match(operators))
+            if (Match(TokenType.FALSE))
             {
                 return new Literal<T>(false);
             }
-            operators = new List<TokenType> { TokenType.TRUE };
-            if (Match(operators))
+            if (Match(TokenType.TRUE))
             {
                 return new Literal<T>(true);
             }
-            operators = new List<TokenType> { TokenType.NUMBER, TokenType.STRING };
+            List<TokenType> operators = new List<TokenType> { TokenType.NUMBER, TokenType.STRING };
             if (Match(operators))
             {
                 return new Literal<T>(Previous()._literal);
             }
-            operators = new List<TokenType> { TokenType.IDENTIFIER };
-            if (Match(operators))
+            if (Match(TokenType.IDENTIFIER))
             {
                 Token var = Previous();
                 operators = new List<TokenType> { TokenType.PLUS_PLUS, TokenType.MINUS_MINUS };
@@ -544,8 +607,7 @@ namespace Odin
                 }
                 return new Variable<T>(Previous());
             }
-            operators = new List<TokenType> { TokenType.LEFT_PAREN };
-            if (Match(operators))
+            if (Match(TokenType.LEFT_PAREN))
             {
                 Expr<T> expr = Expression();
                 Consume(TokenType.RIGHT_PAREN, "Expected ')' after expression.");
@@ -569,9 +631,30 @@ namespace Odin
         private Expr<T> PreOper()
         {
             Token oper = Previous();
-            Consume(TokenType.IDENTIFIER, $"Expected IDENTIFIER after '{oper._lexeme}'.");
+            if (!Consume(TokenType.IDENTIFIER, $"Expected IDENTIFIER after '{oper._lexeme}'.")) return null!;
             Expr<T> Expre = new PreOper<T>(oper, new Variable<T>(Previous()));
+            if (Check(TokenType.DOT))
+            {
+                _current--;
+                Expr<T> expr = Call();
+                if(!(expr is Get<T>))
+                {
+                    ThrowError(oper, "Operation can only be aplaied to integer variables and Card properties.");
+                    return null!;
+                }
+                Expre = new PreOper<T>(oper, expr);
+            }
             return Expre;
+        }
+
+        private bool Match(TokenType oper)
+        {
+            if (Check(oper))
+            {
+                Advance();
+                return true;
+            }
+            return false;
         }
 
         private bool Match(List<TokenType> operators)
@@ -619,7 +702,7 @@ namespace Odin
 
         private void ThrowError(Token token, string message)
         {
-            ErrorReporter.ThrowError(message, token._line, token._position, token._lineBeginning);
+            ErrorReporter.ThrowError(message, token);
         }
 
         private void Synchronize()

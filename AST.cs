@@ -27,6 +27,54 @@ namespace Odin
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitBinaryExpr(this);
     }
 
+    internal class Call<T> : Expr<T>
+    {
+        internal Expr<T> _callee;
+        internal Token _paren;
+        internal List<Expr<T>> _arguments;
+
+        internal Call(Expr<T> callee, Token paren, List<Expr<T>> arguments)
+        {
+            _callee = callee;
+            _paren = paren;
+            _arguments = arguments;
+        }
+
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitCallExpr(this);
+    }
+
+    internal class Get<T> : Expr<T>
+    {
+        internal Expr<T> _obj;
+        internal Token _name;
+
+        internal Get(Expr<T> obj, Token name)
+        {
+            _obj = obj;
+            _name = name;
+        }
+
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitGetExpr(this);
+    }
+
+    internal class Set<T> : Expr<T>
+    {
+        internal Expr<T> _obj;
+        internal Token _name;
+        internal Token _oper;
+        internal Expr<T> _value;
+
+        internal Set(Expr<T> obj, Token name, Token oper, Expr<T> value)
+        {
+            _obj = obj;
+            _name = name;
+            _oper = oper;
+            _value = value;
+        }
+
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitSetExpr(this);
+    }
+
     internal class Grouping<T> : Expr<T>
     {
         internal Expr<T> _expression;
@@ -75,9 +123,9 @@ namespace Odin
 
     internal class PostOper<T> : Expr<T>
     {
-        internal Variable<T> _var;
+        internal Expr<T> _var;
         internal Token _type;
-        internal PostOper(Variable<T> var, Token type)
+        internal PostOper(Expr<T> var, Token type)
         {
             _var = var;
             _type = type;
@@ -89,8 +137,8 @@ namespace Odin
     internal class PreOper<T> : Expr<T>
     {
         internal Token _type;
-        internal Variable<T> _var;
-        internal PreOper(Token type, Variable<T> var)
+        internal Expr<T> _var;
+        internal PreOper(Token type, Expr<T> var)
         {
             _type = type;
             _var = var;
@@ -153,14 +201,14 @@ namespace Odin
 
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitWhileStmt(this);
     }
-
+    
     internal class For<T> : Stmt<T>
     {
         internal Token _iter;
-        internal Token _list;
+        internal Expr<T> _list;
         internal Stmt<T> _body;
 
-        internal For(Token iter, Token list, Stmt<T> body)
+        internal For(Token iter, Expr<T> list, Stmt<T> body)
         {
             _iter = iter;
             _list = list;
@@ -169,7 +217,7 @@ namespace Odin
 
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitForStmt(this);
     }
-
+    /*
     internal abstract class Prop<T>
     {
         internal abstract T Accept(IVisitor<T> visitor);
@@ -259,17 +307,29 @@ namespace Odin
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitSingleProp(this);
     }
 
-    internal class Predicate<T> : Prop<T>
+    internal class Pred<T> : Prop<T>
     {
-        internal Token _predicate;
         internal Token _card;
         internal Expr<T> _condition;
 
-        internal Predicate(Token predicate, Token card, Expr<T> condition)
+        internal Pred(Token card, Expr<T> condition)
         {
-            _predicate = predicate;
             _card = card;
             _condition = condition;
+        }
+
+        internal override T Accept(IVisitor<T> visitor) => visitor.VisitPredProp(this);
+    }
+
+    internal class Predicate<T> : Prop<T>
+    {
+        internal Token _predicate;
+        internal Prop<T> _pred;
+
+        internal Predicate(Token predicate, Prop<T> pred)
+        {
+            _predicate = predicate;
+            _pred = pred;
         }
 
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitPredicateProp(this);
@@ -463,4 +523,4 @@ namespace Odin
 
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitEffectClassClass(this);
     }
-}
+*/}
