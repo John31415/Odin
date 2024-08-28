@@ -14,10 +14,10 @@ namespace Odin
         internal Environment globals = new Environment();
         private Environment environment = new Environment();
         private GameState gameState;
-        private Lists lastList;
-        private Card lastCard;
-        private string auxForItemName;
-        private Card auxForItemValue;
+        private Lists? lastList;
+        private Card? lastCard;
+        private string? auxForItemName;
+        private Card? auxForItemValue;
 
         internal Interpreter(GameState _gameState)
         {
@@ -25,20 +25,175 @@ namespace Odin
             environment = globals;
             globals.Define("rand", new Rand());
             globals.Define("log", new Log());
-            globals.Define("context", new Context(gameState));
         }
 
-        public void Interpret(List<Stmt<object>> statements)
+        public Dictionary<Card, Method<object>> CreateCards(List<Class<object>> classes)
         {
-            foreach (Stmt<object> stmt in statements)
+            Dictionary<Card, Method<object>> cards = new Dictionary<Card, Method<object>>();
+            foreach (var klass in classes)
             {
-                Execute(stmt);
+                if (klass is EffectClass<object>) continue;
+                object type = Execute(((CardClass<object>)klass)._type);
+                object name = Execute(((CardClass<object>)klass)._name);
+                object faction = Execute(((CardClass<object>)klass)._faction);
+                object power = Execute(((CardClass<object>)klass)._power);
+                object range = Execute(((CardClass<object>)klass)._range);
+                Card card = new Card(0, 0, (string)type, (string)name, (string)faction, (long)power, (string)range, "");
+                cards[card] = ((CardClass<object>)klass)._onActivation; 
             }
+            return cards;
         }
 
-        private object Execute(Stmt<object> stmt)
+        //public void Interpret(List<Stmt<object>> statements)
+        //{
+        //    foreach (Stmt<object> stmt in statements)
+        //    {
+        //        Execute(stmt);
+        //    }
+        //}
+
+        private object Execute(Class<object> klass) => klass.Accept(this);
+        private object Execute(Method<object> method) => method.Accept(this);
+        private object Execute(Prop<object> prop) => prop.Accept(this);
+        private object Execute(Stmt<object> stmt) => stmt.Accept(this);
+
+        public object VisitCardClassClass(CardClass<object> cardClass)
         {
-            return stmt.Accept(this);
+            return null!;
+        }
+
+        public object VisitEffectClassClass(EffectClass<object> effectClass)
+        {
+            return null!;
+        }
+
+        public object VisitOnActivationMethod(OnActivation<object> onActivation)
+        {
+            return null!;
+        }
+
+        public object VisitOnActBodyMethod(OnActBody<object> onActBody)
+        {
+            return null!;
+        }
+
+        public object VisitEffectMethod(Effect<object> effect)
+        {
+            return null!;
+        }
+
+        public object VisitSelectorMethod(Selector<object> selector)
+        {
+            return null!;
+        }
+
+        public object VisitParamsMethod(Params<object> _params)
+        {
+            return null!;
+        }
+
+        public object VisitActionMethod(Action<object> action)
+        {
+            return null!;
+        }
+
+        public object VisitTypeProp(Type<object> type)
+        {
+            object value = Evaluate(type._value);
+            if (!(value is string))
+            {
+                ThrowError(type._type, "'Type' must be a string.");
+                return null!;
+            }
+            return value;
+        }
+
+        public object VisitNameProp(Name<object> name)
+        {
+            object value = Evaluate(name._value);
+            if (!(value is string))
+            {
+                ThrowError(name._name, "'Name' must be a string.");
+                return null!;
+            }
+            return value;
+        }
+
+        public object VisitFactionProp(Faction<object> faction)
+        {
+            object value = Evaluate(faction._value);
+            if (!(value is string))
+            {
+                ThrowError(faction._faction, "'Faction' must be a string.");
+                return null!;
+            }
+            return value;
+        }
+
+        public object VisitPowerProp(Power<object> power)
+        {
+            object value = Evaluate(power._value);
+            if (!(value is long))
+            {
+                ThrowError(power._power, "'Power' must be an integer.");
+                return null!;
+            }
+            return value;
+        }
+
+        public object VisitRangeProp(Range<object> range)
+        {
+            string rangeStr = "";
+            Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+            keyValuePairs["Melee"] = "M";
+            keyValuePairs["Ranged"] = "R";
+            keyValuePairs["Siege"] = "S";
+            foreach (var r in range._list)
+            {
+                object value = Evaluate(r);
+                if (!(value is string))
+                {
+                    ThrowError(range._range, "'Range' must be a set of strings.");
+                    return null!;
+                }
+                if (!keyValuePairs.ContainsKey((string)value))
+                {
+                    ThrowError(range._range, "'Range' set can only have strings 'Melee', 'Ranged' or 'Siege'.");
+                    return null!;
+                }
+                rangeStr += keyValuePairs[(string)value];
+            }
+            return rangeStr;
+        }
+
+        public object VisitSourceProp(Source<object> source)
+        {
+            return null!;
+        }
+
+        public object VisitSingleProp(Single<object> single)
+        {
+            return null!;
+        }
+
+        public object VisitPredProp(Pred<object> pred)
+        {
+            return null!;
+        }
+
+        public object VisitPredicateProp(Predicate<object> predicate)
+        {
+            return null!;
+        }
+
+        public object VisitParamDeclProp(ParamDecl<object> paramDecl)
+        {
+            return null!;
+        }
+
+        public object VisitParamValueProp(ParamValue<object> paramValue)
+        {
+            return null!;
         }
 
         public object VisitLiteralExpr(Literal<object> expr) => expr._value;
@@ -212,7 +367,7 @@ namespace Odin
         public object VisitCallExpr(Call<object> expr)
         {
             object callee = Evaluate(expr._callee);
-            Lists auxList = lastList;
+            Lists auxList = lastList!;
             List<object> arguments = new List<object>();
             foreach (var arg in expr._arguments)
             {
@@ -229,7 +384,7 @@ namespace Odin
                 ThrowError(expr._paren, $"Expected {function.Arity()} arguments but got {arguments.Count}.");
                 return null!;
             }
-            arguments.Add(auxList);//provisional
+            arguments.Add(auxList!);
             return function.Call(gameState, this, arguments, expr._paren);
         }
 
@@ -306,7 +461,7 @@ namespace Odin
         public object VisitPostOperExpr(PostOper<object> postOper)
         {
             object value = Evaluate(postOper._var);
-            Card auxCard = lastCard;
+            Card auxCard = lastCard!;
             if (!(value is long))
             {
                 ThrowError(postOper._type, $"The object must contain an integer value.");
@@ -331,7 +486,7 @@ namespace Odin
         public object VisitPreOperExpr(PreOper<object> preOper)
         {
             object value = Evaluate(preOper._var);
-            Card auxCard = lastCard;
+            Card auxCard = lastCard!;
             if (!(value is long))
             {
                 ThrowError(preOper._type, $"The object must contain an integer value.");
@@ -390,7 +545,7 @@ namespace Odin
         internal void ExecuteBlock(List<Stmt<object>> statements, Environment environment)
         {
             Environment previous = this.environment;
-            if (auxForItemName != null!) environment.Define(auxForItemName, auxForItemValue);
+            if (auxForItemName != null!) environment.Define(auxForItemName, auxForItemValue!);
             this.environment = environment;
             foreach (Stmt<object> stmt in statements)
             {

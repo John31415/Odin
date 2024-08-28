@@ -10,33 +10,43 @@ namespace Odin
 {
     public class Run
     {
-        public static string Errors { get; set; }
+        public static string? Errors { get; set; }
+
+        public List<Card>? CardsCreated { get; private set; }
+
+        internal Dictionary<string, Method<object>> onActs { get; set; }
 
         public Run(GameState gameState, string input)
         {
-            //string cad = "n = 4;\r\ncad = \"pan\";\r\ncad2 = \"barras\";\r\ncad = n @@ cad2 @ \" de \"@cad;";
-            //string cad = "v = 3;\r\n\r\n{\r\nvar = 5;\r\n\t\r\n\tvar = \"pan\";\r\n\t}\r\n}";
-            //string cad = "A=\"A1\";\r\nB=\"B1\";\r\nC=\"C1\";\r\nA=A@\"\";\r\nB=B@\"\";\r\nC=C@\"\";\r\n\r\n{\r\n\r\n  A=\"A2\";\r\n  B=\"B2\";\r\n  A=A@\"\";\r\n  B=B@\"\";\r\n \r\n  { \r\n\r\n   A=\"A3\";\r\n   A=A@\"\";\r\n\r\n   {\r\n\r\n    B=\"B4\";\r\n    C=\"C4\";\r\n    B=B@\"\";\t\r\n    C=C@\"\";\r\n\r\n   }\r\n\r\n   A=A@\"\";\r\n   B=B@\"\";\r\n   C=C@\"\";\r\n\r\n  }\r\n\r\n  A=A@\"\";\r\n  B=B@\"\";\r\n  C=C@\"\";\r\n\r\n}\r\n\r\nA=A@\"\";\r\nB=B@\"\";\r\nC=C@\"\";";
-            //string cad = "//while testing\r\na = 1;\r\nwhile(a<5){\r\n\ta *= 2;\r\n}\r\na=a@\"\";";
-            //string cad = "//fibonacci\r\n\r\nA=0;\r\nB=1;\r\ncont=10;\r\nwhile(cont){\r\ncont--;\r\nfib = \"fibonacci\";\r\nC = A+B;\r\nA=B;\r\nB=C;\r\n}";
-            //string cad = "}";
-            //string cad = "v = a;";
-            //string cad = "// += *= ...\r\na=9;a++;++a;--a;a*=10;a+=5;a-=2;a/=2;a%=5;a&=1;a|=2;a^=4;a~=2;a>>=1;a<<=1;a@=a;a@@=a;";
-            //string cad = "cad = \"pan\"; cad = 5;cad=(-++cad);cad@=\"\";";
-            //string cad = "c=0;while(c<5) c++;c@=\"\";";
-            //string cad = "a = log(2,1000000000);context.TriggerPlayer;";
+            Errors = "";
+
             input = NormalizeInput.Normalize(input);
 
-            Scanner S = new Scanner(input);
-            List<Token> lista = new List<Token>();
-            lista = S.ScanTokens();
-            //foreach (var token in lista) WriteLine(token);
+            Scanner scanner = new Scanner(input);
+            List<Token> tokens = scanner.ScanTokens();
 
-            Parser<object> parser = new Parser<object>(lista);
-            List<Stmt<object>> stmts = parser.Parse();
+            Parser<object> parser = new Parser<object>(tokens);
+            List<Class<object>> classes = parser.Parse();
 
             Interpreter interpreter = new Interpreter(gameState);
-            interpreter.Interpret(stmts);
+            Dictionary<Card, Method<object>> pairs = interpreter.CreateCards(classes);
+
+            CardsCreated = new List<Card>();
+            onActs = new Dictionary<string, Method<object>>();
+            foreach(var pair in pairs)
+            {
+                CardsCreated.Add(pair.Key);
+                onActs[pair.Key.Name] = pair.Value;
+            }
+
+            //foreach (var card in CardsCreated)
+            //{
+            //    WriteLine(card.Type);
+            //    WriteLine(card.Name);
+            //    WriteLine(card.Faction);
+            //    WriteLine(card.Power);
+            //    WriteLine(card.Range);
+            //}
         }
     }
 }

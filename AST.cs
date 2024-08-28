@@ -217,7 +217,7 @@ namespace Odin
 
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitForStmt(this);
     }
-    /*
+    
     internal abstract class Prop<T>
     {
         internal abstract T Accept(IVisitor<T> visitor);
@@ -523,4 +523,4 @@ namespace Odin
 
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitEffectClassClass(this);
     }
-*/}
+}
