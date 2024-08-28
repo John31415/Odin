@@ -1,0 +1,6 @@
+D:\Odin\GitHub\Odin\obj\Debug\netcoreapp2.0\Odin.csproj.AssemblyReference.cache
+D:\Odin\GitHub\Odin\obj\Debug\netcoreapp2.0\Odin.GeneratedMSBuildEditorConfig.editorconfig
+D:\Odin\GitHub\Odin\obj\Debug\netcoreapp2.0\Odin.AssemblyInfoInputs.cache
+D:\Odin\GitHub\Odin\obj\Debug\netcoreapp2.0\Odin.AssemblyInfo.cs
+D:\Odin\GitHub\Odin\obj\Debug\netcoreapp2.0\Odin.csproj.CoreCompileInputs.cache
+D:\Odin\GitHub\Odin\obj\Debug\netcoreapp2.0\Odin.sourcelink.json

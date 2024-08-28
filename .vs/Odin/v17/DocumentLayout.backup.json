@@ -3,52 +3,32 @@
   "WorkspaceRootPath": "D:\\Odin\\GitHub\\Odin\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\icallable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:icallable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\card.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:card.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\gamestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:gamestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\ast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:ast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\interpreter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:interpreter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\tokentype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:tokentype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\buildcard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:buildcard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\ivisitor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:ivisitor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\environment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:environment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Odin\\GitHub\\Odin\\ICard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:ICard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\lists.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:lists.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\interpreter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:interpreter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\ast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:ast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\run.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:run.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -58,152 +38,98 @@
       "DocumentGroups": [
         {
           "DockedWidth": 321,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "ICard.cs",
-              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\ICard.cs",
-              "RelativeDocumentMoniker": "ICard.cs",
-              "ToolTip": "D:\\Odin\\GitHub\\Odin\\ICard.cs",
-              "RelativeToolTip": "ICard.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-25T07:36:16.505Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Card.cs",
-              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\Card.cs",
-              "RelativeDocumentMoniker": "Card.cs",
-              "ToolTip": "D:\\Odin\\GitHub\\Odin\\Card.cs",
-              "RelativeToolTip": "Card.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAoAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-25T07:06:48.818Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "GameState.cs",
-              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\GameState.cs",
-              "RelativeDocumentMoniker": "GameState.cs",
-              "ToolTip": "D:\\Odin\\GitHub\\Odin\\GameState.cs",
-              "RelativeToolTip": "GameState.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-25T06:14:18.304Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Context.cs",
-              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\Context.cs",
-              "RelativeDocumentMoniker": "Context.cs",
-              "ToolTip": "D:\\Odin\\GitHub\\Odin\\Context.cs",
-              "RelativeToolTip": "Context.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-25T06:11:42.337Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ICallable.cs",
-              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\ICallable.cs",
-              "RelativeDocumentMoniker": "ICallable.cs",
-              "ToolTip": "D:\\Odin\\GitHub\\Odin\\ICallable.cs",
-              "RelativeToolTip": "ICallable.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEEAAAAAAAAAAAAAAA==",
+              "Title": "BuildCard.cs",
+              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\BuildCard.cs",
+              "RelativeDocumentMoniker": "BuildCard.cs",
+              "ToolTip": "D:\\Odin\\GitHub\\Odin\\BuildCard.cs",
+              "RelativeToolTip": "BuildCard.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-22T04:15:23.178Z",
+              "WhenOpened": "2024-08-27T05:37:41.878Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "TokenType.cs",
-              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\TokenType.cs",
-              "RelativeDocumentMoniker": "TokenType.cs",
-              "ToolTip": "D:\\Odin\\GitHub\\Odin\\TokenType.cs",
-              "RelativeToolTip": "TokenType.cs",
-              "ViewState": "AgIAACYAAAAAAAAAAAAQwKUAAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-24T06:26:54.156Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "IVisitor.cs",
-              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\IVisitor.cs",
-              "RelativeDocumentMoniker": "IVisitor.cs",
-              "ToolTip": "D:\\Odin\\GitHub\\Odin\\IVisitor.cs",
-              "RelativeToolTip": "IVisitor.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAABUAAAA7AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-21T04:26:17.366Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "AST.cs",
               "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\AST.cs",
               "RelativeDocumentMoniker": "AST.cs",
               "ToolTip": "D:\\Odin\\GitHub\\Odin\\AST.cs",
               "RelativeToolTip": "AST.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAmwEsAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAL8AAAAAAAAAAAAmwNIAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-21T04:18:09.187Z"
+              "WhenOpened": "2024-08-26T11:50:24.738Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 1,
               "Title": "Parser.cs",
               "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\Parser.cs",
               "RelativeDocumentMoniker": "Parser.cs",
               "ToolTip": "D:\\Odin\\GitHub\\Odin\\Parser.cs",
               "RelativeToolTip": "Parser.cs",
-              "ViewState": "AgIAAKoAAAAAAAAAAAAQwGkBAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAFwBAAAAAAAAAAAowJ0BAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-19T05:25:20.953Z"
+              "WhenOpened": "2024-08-19T05:25:20.953Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "Interpreter.cs",
               "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\Interpreter.cs",
               "RelativeDocumentMoniker": "Interpreter.cs",
               "ToolTip": "D:\\Odin\\GitHub\\Odin\\Interpreter.cs",
               "RelativeToolTip": "Interpreter.cs",
-              "ViewState": "AgIAACgAAAAAAAAAAAAmwBUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAHUBAAAAAAAAAAAQwIgBAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-21T04:43:17.514Z"
+              "WhenOpened": "2024-08-21T04:43:17.514Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Environment.cs",
-              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\Environment.cs",
-              "RelativeDocumentMoniker": "Environment.cs",
-              "ToolTip": "D:\\Odin\\GitHub\\Odin\\Environment.cs",
-              "RelativeToolTip": "Environment.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAgwDcAAAA8AAAAAAAAAA==",
+              "DocumentIndex": 6,
+              "Title": "Run.cs",
+              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\Run.cs",
+              "RelativeDocumentMoniker": "Run.cs",
+              "ToolTip": "D:\\Odin\\GitHub\\Odin\\Run.cs",
+              "RelativeToolTip": "Run.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAQwB0AAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-22T07:05:21.024Z"
+              "WhenOpened": "2024-08-26T04:46:44.724Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\Odin\\GitHub\\Odin\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABgAAABGAAAAAAAAAA==",
+              "ViewState": "AgIAABYAAAAAAAAAAAAAAB0AAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-01T05:04:42.896Z"
+              "WhenOpened": "2024-08-26T08:58:19.653Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Lists.cs",
+              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\Lists.cs",
+              "RelativeDocumentMoniker": "Lists.cs",
+              "ToolTip": "D:\\Odin\\GitHub\\Odin\\Lists.cs",
+              "RelativeToolTip": "Lists.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABcAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-26T09:15:38.342Z",
+              "EditorCaption": ""
             }
           ]
         },
