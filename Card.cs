@@ -18,7 +18,7 @@ namespace Odin
         public string Range { get; set; }
         public string Description { get; set; }
 
-        public Card(int owner, int id, string type, string name, string faction, int power, string range, string description)
+        public Card(long owner, long id, string type, string name, string faction, long power, string range, string description)
         {
             Owner = owner;
             Id = id;
