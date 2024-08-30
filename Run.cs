@@ -8,17 +8,20 @@ using static System.Console;
 
 namespace Odin
 {
-    public class Run
+    public static class Run
     {
         public static string? Errors { get; set; }
 
-        public List<Card>? CardsCreated { get; private set; }
+        public static List<Card>? CardsCreated { get; private set; }
 
-        internal Dictionary<string, Method<object>> onActs { get; set; }
+        internal static Dictionary<string, Method<object>>? onActs { get; set; }
 
-        public Run(GameState gameState, string input)
+        internal static List<EffectClass<object>>? effects { get; set; }
+
+        public static void RunCode(string input)
         {
             Errors = "";
+            effects = new List<EffectClass<object>>();
 
             input = NormalizeInput.Normalize(input);
 
@@ -28,7 +31,7 @@ namespace Odin
             Parser<object> parser = new Parser<object>(tokens);
             List<Class<object>> classes = parser.Parse();
 
-            Interpreter interpreter = new Interpreter(gameState);
+            Interpreter interpreter = new Interpreter();
             Dictionary<Card, Method<object>> pairs = interpreter.CreateCards(classes);
 
             CardsCreated = new List<Card>();
@@ -38,15 +41,13 @@ namespace Odin
                 CardsCreated.Add(pair.Key);
                 onActs[pair.Key.Name] = pair.Value;
             }
+        }
 
-            //foreach (var card in CardsCreated)
-            //{
-            //    WriteLine(card.Type);
-            //    WriteLine(card.Name);
-            //    WriteLine(card.Faction);
-            //    WriteLine(card.Power);
-            //    WriteLine(card.Range);
-            //}
+        public static void RunEffect(string cardName, GameState gameState)
+        {
+            Errors = "";
+            Interpreter interpreter = new Interpreter(gameState);
+            interpreter.AplyEffect(effects, onActs[cardName]);
         }
     }
 }

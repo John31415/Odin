@@ -307,29 +307,17 @@ namespace Odin
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitSingleProp(this);
     }
 
-    internal class Pred<T> : Prop<T>
-    {
-        internal Token _card;
-        internal Expr<T> _condition;
-
-        internal Pred(Token card, Expr<T> condition)
-        {
-            _card = card;
-            _condition = condition;
-        }
-
-        internal override T Accept(IVisitor<T> visitor) => visitor.VisitPredProp(this);
-    }
-
     internal class Predicate<T> : Prop<T>
     {
         internal Token _predicate;
-        internal Prop<T> _pred;
+        internal Token _card;
+        internal Expr<T> _condition;
 
-        internal Predicate(Token predicate, Prop<T> pred)
+        internal Predicate(Token predicate, Token card, Expr<T> condition)
         {
             _predicate = predicate;
-            _pred = pred;
+            _card = card;
+            _condition = condition;
         }
 
         internal override T Accept(IVisitor<T> visitor) => visitor.VisitPredicateProp(this);
@@ -467,8 +455,8 @@ namespace Odin
 
     internal class Action<T> : Method<T>
     {
-        Token _targets;
-        Token _context;
+        internal Token _targets;
+        internal Token _context;
         internal List<Stmt<T>> _stmts;
 
         internal Action(Token targets, Token context, List<Stmt<T>> stmts)

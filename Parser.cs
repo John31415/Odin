@@ -246,24 +246,18 @@ namespace Odin
             return new Single<T>(single, value);
         }
 
-        private Prop<T> Pred()
+        private Prop<T> Predicate()
         {
+            if (!Consume(TokenType.PREDICATE, "Expected 'Predicate' declaration.")) return null!;
+            Token predicate = Previous();
+            if (!Consume(TokenType.COLON, "Expected ':' after 'Predicate'.")) return null!;
             if (!Consume(TokenType.LEFT_PAREN, "Expected '('.")) return null!;
             if (!Consume(TokenType.IDENTIFIER, "Expected identifier.")) return null!;
             Token card = Previous();
             if (!Consume(TokenType.RIGHT_PAREN, "Expected ')'.")) return null!;
             if (!Consume(TokenType.LAMBDA, "Expected \"=>\".")) return null!;
             Expr<T> condition = Expression();
-            return new Pred<T>(card, condition);
-        }
-
-        private Prop<T> Predicate()
-        {
-            if (!Consume(TokenType.PREDICATE, "Expected 'Predicate' declaration.")) return null!;
-            Token predicate = Previous();
-            if (!Consume(TokenType.COLON, "Expected ':' after 'Predicate'.")) return null!;
-            Prop<T> pred = Pred();
-            return new Predicate<T>(predicate, pred);
+            return new Predicate<T>(predicate, card, condition);
         }
 
         private Prop<T> Name()

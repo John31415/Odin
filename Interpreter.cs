@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-using static System.Console;
+﻿using System.Collections.Generic;
 
 namespace Odin
 {
@@ -16,8 +9,18 @@ namespace Odin
         private GameState gameState;
         private Lists? lastList;
         private Card? lastCard;
-        private string? auxForItemName;
-        private Card? auxForItemValue;
+        private object parentTargets;
+        private Lists actualSource;
+        private Dictionary<string, (Dictionary<string, TokenType>, Method<object>)> effectFun;
+        private Lists TARGETS;
+
+        internal Interpreter()
+        {
+            environment = globals;
+            globals.Define("rand", new Rand());
+            globals.Define("log", new Log());
+            parentTargets = null!;
+        }
 
         internal Interpreter(GameState _gameState)
         {
@@ -25,32 +28,36 @@ namespace Odin
             environment = globals;
             globals.Define("rand", new Rand());
             globals.Define("log", new Log());
+            parentTargets = null!;
         }
 
-        public Dictionary<Card, Method<object>> CreateCards(List<Class<object>> classes)
+        internal Dictionary<Card, Method<object>> CreateCards(List<Class<object>> classes)
         {
             Dictionary<Card, Method<object>> cards = new Dictionary<Card, Method<object>>();
             foreach (var klass in classes)
             {
-                if (klass is EffectClass<object>) continue;
-                object type = Execute(((CardClass<object>)klass)._type);
-                object name = Execute(((CardClass<object>)klass)._name);
-                object faction = Execute(((CardClass<object>)klass)._faction);
-                object power = Execute(((CardClass<object>)klass)._power);
-                object range = Execute(((CardClass<object>)klass)._range);
-                Card card = new Card(0, 0, (string)type, (string)name, (string)faction, (long)power, (string)range, "");
-                cards[card] = ((CardClass<object>)klass)._onActivation; 
+                if (klass is EffectClass<object>)
+                {
+                    Run.effects.Add((EffectClass<object>)klass);
+                    continue;
+                }
+                Card card = (Card)Execute(klass);
+                if (card != null)
+                {
+                    cards[card] = ((CardClass<object>)klass)._onActivation;
+                }
             }
             return cards;
         }
 
-        //public void Interpret(List<Stmt<object>> statements)
-        //{
-        //    foreach (Stmt<object> stmt in statements)
-        //    {
-        //        Execute(stmt);
-        //    }
-        //}
+        internal void AplyEffect(List<EffectClass<object>> effects, Method<object> OnActivation)
+        {
+            effectFun = new Dictionary<string, (Dictionary<string, TokenType>, Method<object>)>();
+            foreach (var effect in effects)
+            {
+                Execute(effect);
+            }
+        }
 
         private object Execute(Class<object> klass) => klass.Accept(this);
         private object Execute(Method<object> method) => method.Accept(this);
@@ -59,41 +66,117 @@ namespace Odin
 
         public object VisitCardClassClass(CardClass<object> cardClass)
         {
-            return null!;
+            object type = Execute(cardClass._type);
+            object name = Execute(cardClass._name);
+            object faction = Execute(cardClass._faction);
+            object power = Execute(cardClass._power);
+            object range = Execute(cardClass._range);
+            return new Card(0, 0, (string)type, (string)name, (string)faction, (long)power, (string)range, "");
         }
 
         public object VisitEffectClassClass(EffectClass<object> effectClass)
         {
+            object name = Execute(effectClass._name);
+            object _params = Execute(effectClass._params);
+            effectFun[(string)name] = ((Dictionary<string, TokenType>, Method<object>))(_params, effectClass._action);
             return null!;
         }
 
         public object VisitOnActivationMethod(OnActivation<object> onActivation)
         {
+            foreach(var onAct in onActivation._onActBodies)
+            {
+                Execute(onAct);
+            }
             return null!;
         }
 
         public object VisitOnActBodyMethod(OnActBody<object> onActBody)
         {
+            object effect = Execute(onActBody._effect);
+            Token effectToken;
+            string nameEffect;
+            Dictionary<string, object> paramsEffect;
+            (effectToken, nameEffect, paramsEffect) = ((Token, string, Dictionary<string, object>))effect;
+            object selector, postAction;
+            if(onActBody._selector != null)
+            {
+                selector = Execute(onActBody._selector);
+            }
+            else
+            {
+                selector = parentTargets;
+            }
+            DoActionEffect(effectToken, nameEffect, paramsEffect, (Lists)selector);
+            parentTargets = selector;
+            if(onActBody._postAction != null)
+            {
+                postAction = Execute(onActBody._postAction);
+            }
             return null!;
         }
 
         public object VisitEffectMethod(Effect<object> effect)
         {
-            return null!;
+            Dictionary<string, object> _params = new Dictionary<string, object>();
+            if(effect._exprName != null)
+            {
+                return ((string)Evaluate(effect._exprName), _params);
+            }
+            object name = Execute(effect._name);
+            foreach(var _param in effect._paramsv)
+            {
+                string paramName;
+                object paramValue;
+                (paramName, paramValue) = ((string, object))Execute(_param);
+                _params[paramName] = paramValue;
+            }
+            return (effect._effect, (string)name,  _params);
         }
 
         public object VisitSelectorMethod(Selector<object> selector)
         {
-            return null!;
+            object source = Execute(selector._source);
+            if (source == null) return null!;
+            object single = Execute(selector._single);
+            if (single == null) return null!;
+            actualSource = (Lists)source;
+            object predicate = Execute(selector._predicate);
+            actualSource = null!;
+            if (predicate == null) return null!;
+            if (((Lists)predicate).Cards.Count == 0)
+            {
+                return (Lists)predicate;
+            }
+            List<Card> list = ((Lists)predicate).Cards;
+            if ((bool)single)
+            {
+                list = new List<Card> { ((Lists)predicate).Cards[0] };
+            }
+            return new Lists(list);
         }
 
         public object VisitParamsMethod(Params<object> _params)
         {
-            return null!;
+            Dictionary<string, TokenType> paramsDict = new Dictionary<string, TokenType>();
+            foreach (var _param in _params._paramsList)
+            {
+                string name;
+                TokenType value;
+                (name, value) = ((string, TokenType))Execute(_param);
+                paramsDict[name] = value;
+            }
+            return paramsDict;
         }
 
         public object VisitActionMethod(Action<object> action)
         {
+            environment.Define(action._targets._lexeme, TARGETS);
+            environment.Define(action._context._lexeme, new Context(gameState));
+            foreach(var stmt in action._stmts)
+            {
+                Execute(stmt);
+            }
             return null!;
         }
 
@@ -168,32 +251,70 @@ namespace Odin
 
         public object VisitSourceProp(Source<object> source)
         {
+            object value = Evaluate(source._value);
+            if (value == null!)
+            {
+                ThrowError(source._source, "'Source' parameter can't be null.");
+                return null!;
+            }
+            if (!(value is string))
+            {
+                ThrowError(source._source, "'Source' parameter must contain a 'string'.");
+                return null!;
+            }
+            if ((string)value == "board") return gameState.Board;
+            if ((string)value == "hand") return gameState.Hand;
+            if ((string)value == "otherHand") return gameState.OtherHand;
+            if ((string)value == "field") return gameState.Field;
+            if ((string)value == "otherField") return gameState.OtherField;
+            if ((string)value == "deck") return gameState.Deck;
+            if ((string)value == "otherDeck") return gameState.OtherDeck;
+            if ((string)value == "parent")
+            {
+                if (parentTargets == null)
+                {
+                    ThrowError(source._source, "Unknown 'parent' targets");
+                    return null!;
+                }
+                return parentTargets;
+            }
+            ThrowError(source._source, "The value must be 'board', 'hand', 'otherHand', 'field', 'otherField', 'deck', 'otherDeck' or 'parent'");
             return null!;
         }
 
         public object VisitSingleProp(Single<object> single)
         {
-            return null!;
-        }
-
-        public object VisitPredProp(Pred<object> pred)
-        {
-            return null!;
+            object value = Evaluate(single._value);
+            if (value == null!)
+            {
+                ThrowError(single._single, "'Single' parameter can't be null.");
+                return null!;
+            }
+            return IsTrue(value);
         }
 
         public object VisitPredicateProp(Predicate<object> predicate)
         {
-            return null!;
+            List<Card> cards = new List<Card>();
+            foreach (var card in actualSource.Cards)
+            {
+                Environment previous = environment;
+                environment.Define(predicate._card._lexeme, card);
+                bool ok = IsTrue(Evaluate(predicate._condition));
+                if (ok)
+                {
+                    cards.Add(card);
+                }
+                environment = previous;
+            }
+            return new Lists(cards);
         }
 
-        public object VisitParamDeclProp(ParamDecl<object> paramDecl)
-        {
-            return null!;
-        }
+        public object VisitParamDeclProp(ParamDecl<object> paramDecl) => (paramDecl._name._lexeme, paramDecl._value._type);
 
         public object VisitParamValueProp(ParamValue<object> paramValue)
         {
-            return null!;
+            return (paramValue._name._lexeme, Evaluate(paramValue._value));
         }
 
         public object VisitLiteralExpr(Literal<object> expr) => expr._value;
@@ -531,21 +652,65 @@ namespace Odin
                 ThrowError(stmt._iter, "Expected list for this iterator.");
                 return null!;
             }
-            auxForItemName = stmt._iter._lexeme;
             foreach (var item in ((Lists)list).Cards)
             {
-                auxForItemValue = item;
+                Environment previous = environment;
+                environment.Define(stmt._iter._lexeme, item);
                 Execute(stmt._body);
-                auxForItemValue = null!;
+                environment = previous;
             }
-            auxForItemName = null!;
             return null!;
+        }
+
+        internal void DoActionEffect(Token effect, string nameEffect, Dictionary<string, object> paramsEffect, Lists targets)
+        {
+            if (!effectFun.ContainsKey(nameEffect))
+            {
+                ThrowError(effect, "The 'Name' of this 'Effect' was not found.");
+                return;
+            }
+            Dictionary<string, TokenType> realParams = effectFun[nameEffect].Item1;
+            if(paramsEffect.Count != realParams.Count)
+            {
+                ThrowError(effect, $"Effect {nameEffect} expect {realParams.Count} parameter(s).");
+                return;
+            }
+            Environment previous = environment;
+            foreach (var item in paramsEffect)
+            {
+                if (!realParams.ContainsKey(item.Key))
+                {
+                    ThrowError(effect, $"In Effect block, '{nameEffect}' does not expect parameter '{item.Key}'.");
+                    return;
+                }
+                if((item.Value is long) || (realParams[item.Key] == TokenType.NUMBER))
+                {
+                    environment.Define(item.Key, item.Value);
+                    continue;
+                }
+                if ((item.Value is bool) || (realParams[item.Key] == TokenType.BOOL))
+                {
+                    environment.Define(item.Key, item.Value);
+                    continue;
+                }
+                if ((item.Value is string) || (realParams[item.Key] == TokenType.STRING))
+                {
+                    environment.Define(item.Key, item.Value);
+                    continue;
+                }
+                ThrowError(effect, $"In Effect block, the parameter {item.Key} is not of the correct type.");
+                environment = previous;
+                return;
+            }
+            Method<object> action = effectFun[nameEffect].Item2;
+            TARGETS = targets;
+            Execute(action);
+            environment = previous;
         }
 
         internal void ExecuteBlock(List<Stmt<object>> statements, Environment environment)
         {
             Environment previous = this.environment;
-            if (auxForItemName != null!) environment.Define(auxForItemName, auxForItemValue!);
             this.environment = environment;
             foreach (Stmt<object> stmt in statements)
             {

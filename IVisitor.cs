@@ -31,7 +31,6 @@ namespace Odin
         internal T VisitSourceProp(Source<T> prop);
         internal T VisitSingleProp(Single<T> prop);
         internal T VisitPredicateProp(Predicate<T> prop);
-        internal T VisitPredProp(Pred<T> prop);
         internal T VisitParamValueProp(ParamValue<T> param);
         internal T VisitParamDeclProp(ParamDecl<T> param);
         internal T VisitRangeProp(Range<T> param);
