@@ -8,16 +8,16 @@ namespace Odin
 {
     public class GameState
     {
-        internal long TriggerPlayer { get; set; }
-        internal Lists Board { get; set; }
-        internal Lists Deck { get; set; }
-        internal Lists OtherDeck { get; set; }
-        internal Lists Hand { get; set; }
-        internal Lists OtherHand { get; set; }
-        internal Lists Field { get; set; }
-        internal Lists OtherField { get; set; }
-        internal Lists Graveyard { get; set; }
-        internal Lists OtherGraveyard { get; set; }
+        public long TriggerPlayer { get; set; }
+        public Lists Board { get; set; }
+        public Lists Deck { get; set; }
+        public Lists OtherDeck { get; set; }
+        public Lists Hand { get; set; }
+        public Lists OtherHand { get; set; }
+        public Lists Field { get; set; }
+        public Lists OtherField { get; set; }
+        public Lists Graveyard { get; set; }
+        public Lists OtherGraveyard { get; set; }
 
         public GameState(long triggerPlayer, Lists board, Lists deck, Lists otherDeck, Lists hand, Lists otherHand, Lists field, Lists otherField, Lists graveyard, Lists otherGraveyard)
         {

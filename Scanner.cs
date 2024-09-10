@@ -19,7 +19,7 @@ namespace Odin
         private int lineBeginning = 0;
         private Dictionary<string, TokenType> Keywords;
 
-        public static string? Source { get; private set; }
+        public static string Source { get; private set; }
 
         public Scanner(string source)
         {
@@ -49,7 +49,7 @@ namespace Odin
 
         private void AddToken(TokenType type)
         {
-            AddToken(type, null!);
+            AddToken(type, null);
         }
 
         private void AddToken(TokenType type, object literal)
@@ -185,7 +185,7 @@ namespace Odin
                 start = current;
                 ScanToken();
             }
-            _tokens.Add(new Token(TokenType.EOF, "", null!, line, 1, current, lineBeginning));
+            _tokens.Add(new Token(TokenType.EOF, "", null, line, 1, current, lineBeginning));
             return _tokens;
         }
     }

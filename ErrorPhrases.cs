@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Odin
 {
     public class ErrorPhrases
     {
-        private static List<string>? phrases;
-        private static int now = 0;
+        private static List<string> phrases;
+        private static int now = (new Random()).Next() % 14;
 
         public static string RandErrorPhrase()
         {

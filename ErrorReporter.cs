@@ -37,10 +37,10 @@ namespace Odin
 
         private static string ErrorLine(int current, int lineBeginning)
         {
-            string? _source = Scanner.Source;
+            string _source = Scanner.Source;
             int iter = current - 1;
-            for (int i = 0; i < 100 && iter < _source!.Length - 1 && _source[iter + 1] != '\n'; i++) iter++;
-            return _source!.Substring(lineBeginning, iter - lineBeginning + 1);
+            for (int i = 0; i < 100 && iter < _source.Length - 1 && _source[iter + 1] != '\n'; i++) iter++;
+            return _source.Substring(lineBeginning, iter - lineBeginning + 1);
         }
 
         internal static void ThrowError(string message, int line, int current, int lineBeginning)

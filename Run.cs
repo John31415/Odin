@@ -10,13 +10,13 @@ namespace Odin
 {
     public static class Run
     {
-        public static string? Errors { get; set; }
+        public static string Errors { get; set; }
 
-        public static List<Card>? CardsCreated { get; private set; }
+        public static List<Card> CardsCreated { get; private set; }
 
-        internal static Dictionary<string, Method<object>>? onActs { get; set; }
+        internal static Dictionary<string, Method<object>> onActs { get; set; }
 
-        internal static List<EffectClass<object>>? effects { get; set; }
+        internal static List<EffectClass<object>> effects { get; set; }
 
         public static void RunCode(string input)
         {

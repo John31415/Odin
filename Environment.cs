@@ -15,7 +15,7 @@ namespace Odin
 
         public Environment()
         {
-            enclosing = null!;
+            enclosing = null;
         }
 
         public Environment(Environment enclosing)
@@ -31,7 +31,7 @@ namespace Odin
             }
             if (enclosing != null) return enclosing.Get(name);
             ThrowError(name, $"Undefined variable '{name._lexeme}'.");
-            return null!;
+            return null;
         }
 
         public void Define(string name, object value)

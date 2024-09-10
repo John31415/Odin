@@ -7,8 +7,8 @@ namespace Odin
         internal Environment globals = new Environment();
         private Environment environment = new Environment();
         private GameState gameState;
-        private Lists? lastList;
-        private Card? lastCard;
+        private Lists lastList;
+        private Card lastCard;
         private object parentTargets;
         private Lists actualSource;
         private Dictionary<string, (Dictionary<string, TokenType>, Method<object>)> effectFun;
@@ -19,7 +19,7 @@ namespace Odin
             environment = globals;
             globals.Define("rand", new Rand());
             globals.Define("log", new Log());
-            parentTargets = null!;
+            parentTargets = null;
         }
 
         internal Interpreter(GameState _gameState)
@@ -28,7 +28,7 @@ namespace Odin
             environment = globals;
             globals.Define("rand", new Rand());
             globals.Define("log", new Log());
-            parentTargets = null!;
+            parentTargets = null;
         }
 
         internal Dictionary<Card, Method<object>> CreateCards(List<Class<object>> classes)
@@ -60,8 +60,11 @@ namespace Odin
         }
 
         private object Execute(Class<object> klass) => klass.Accept(this);
+
         private object Execute(Method<object> method) => method.Accept(this);
+
         private object Execute(Prop<object> prop) => prop.Accept(this);
+
         private object Execute(Stmt<object> stmt) => stmt.Accept(this);
 
         public object VisitCardClassClass(CardClass<object> cardClass)
@@ -79,7 +82,7 @@ namespace Odin
             object name = Execute(effectClass._name);
             object _params = Execute(effectClass._params);
             effectFun[(string)name] = ((Dictionary<string, TokenType>, Method<object>))(_params, effectClass._action);
-            return null!;
+            return null;
         }
 
         public object VisitOnActivationMethod(OnActivation<object> onActivation)
@@ -88,7 +91,7 @@ namespace Odin
             {
                 Execute(onAct);
             }
-            return null!;
+            return null;
         }
 
         public object VisitOnActBodyMethod(OnActBody<object> onActBody)
@@ -113,7 +116,7 @@ namespace Odin
             {
                 postAction = Execute(onActBody._postAction);
             }
-            return null!;
+            return null;
         }
 
         public object VisitEffectMethod(Effect<object> effect)
@@ -137,13 +140,13 @@ namespace Odin
         public object VisitSelectorMethod(Selector<object> selector)
         {
             object source = Execute(selector._source);
-            if (source == null) return null!;
+            if (source == null) return null;
             object single = Execute(selector._single);
-            if (single == null) return null!;
+            if (single == null) return null;
             actualSource = (Lists)source;
             object predicate = Execute(selector._predicate);
-            actualSource = null!;
-            if (predicate == null) return null!;
+            actualSource = null;
+            if (predicate == null) return null;
             if (((Lists)predicate).Cards.Count == 0)
             {
                 return (Lists)predicate;
@@ -177,7 +180,7 @@ namespace Odin
             {
                 Execute(stmt);
             }
-            return null!;
+            return null;
         }
 
         public object VisitTypeProp(Type<object> type)
@@ -186,7 +189,7 @@ namespace Odin
             if (!(value is string))
             {
                 ThrowError(type._type, "'Type' must be a string.");
-                return null!;
+                return null;
             }
             return value;
         }
@@ -197,7 +200,7 @@ namespace Odin
             if (!(value is string))
             {
                 ThrowError(name._name, "'Name' must be a string.");
-                return null!;
+                return null;
             }
             return value;
         }
@@ -208,7 +211,7 @@ namespace Odin
             if (!(value is string))
             {
                 ThrowError(faction._faction, "'Faction' must be a string.");
-                return null!;
+                return null;
             }
             return value;
         }
@@ -219,7 +222,7 @@ namespace Odin
             if (!(value is long))
             {
                 ThrowError(power._power, "'Power' must be an integer.");
-                return null!;
+                return null;
             }
             return value;
         }
@@ -237,12 +240,12 @@ namespace Odin
                 if (!(value is string))
                 {
                     ThrowError(range._range, "'Range' must be a set of strings.");
-                    return null!;
+                    return null;
                 }
                 if (!keyValuePairs.ContainsKey((string)value))
                 {
                     ThrowError(range._range, "'Range' set can only have strings 'Melee', 'Ranged' or 'Siege'.");
-                    return null!;
+                    return null;
                 }
                 rangeStr += keyValuePairs[(string)value];
             }
@@ -252,15 +255,15 @@ namespace Odin
         public object VisitSourceProp(Source<object> source)
         {
             object value = Evaluate(source._value);
-            if (value == null!)
+            if (value == null)
             {
                 ThrowError(source._source, "'Source' parameter can't be null.");
-                return null!;
+                return null;
             }
             if (!(value is string))
             {
                 ThrowError(source._source, "'Source' parameter must contain a 'string'.");
-                return null!;
+                return null;
             }
             if ((string)value == "board") return gameState.Board;
             if ((string)value == "hand") return gameState.Hand;
@@ -274,21 +277,21 @@ namespace Odin
                 if (parentTargets == null)
                 {
                     ThrowError(source._source, "Unknown 'parent' targets");
-                    return null!;
+                    return null;
                 }
                 return parentTargets;
             }
             ThrowError(source._source, "The value must be 'board', 'hand', 'otherHand', 'field', 'otherField', 'deck', 'otherDeck' or 'parent'");
-            return null!;
+            return null;
         }
 
         public object VisitSingleProp(Single<object> single)
         {
             object value = Evaluate(single._value);
-            if (value == null!)
+            if (value == null)
             {
                 ThrowError(single._single, "'Single' parameter can't be null.");
-                return null!;
+                return null;
             }
             return IsTrue(value);
         }
@@ -327,14 +330,14 @@ namespace Odin
             if (right == null)
             {
                 ThrowError(expr._oper, "Operand can't be null.");
-                return null!;
+                return null;
             }
             switch (expr._oper._type)
             {
                 case TokenType.NOT: return !IsTrue(right);
                 case TokenType.MINUS: return -(long)right;
             }
-            return null!;
+            return null;
         }
 
         public object VisitBinaryExpr(Binary<object> expr)
@@ -344,7 +347,7 @@ namespace Odin
             if (left == null || right == null)
             {
                 ThrowError(expr._oper, "Operands can't be null.");
-                return null!;
+                return null;
             }
             bool band;
             long l, r;
@@ -482,13 +485,13 @@ namespace Odin
                     }
                     break;
             }
-            return null!;
+            return null;
         }
 
         public object VisitCallExpr(Call<object> expr)
         {
             object callee = Evaluate(expr._callee);
-            Lists auxList = lastList!;
+            Lists auxList = lastList;
             List<object> arguments = new List<object>();
             foreach (var arg in expr._arguments)
             {
@@ -497,15 +500,15 @@ namespace Odin
             if (!(callee is ICallable))
             {
                 ThrowError(expr._paren, "Can only call functions.");
-                return null!;
+                return null;
             }
             ICallable function = (ICallable)callee;
             if (arguments.Count != function.Arity())
             {
                 ThrowError(expr._paren, $"Expected {function.Arity()} arguments but got {arguments.Count}.");
-                return null!;
+                return null;
             }
-            arguments.Add(auxList!);
+            arguments.Add(auxList);
             return function.Call(gameState, this, arguments, expr._paren);
         }
 
@@ -515,43 +518,43 @@ namespace Odin
             if (!(obj is IClass))
             {
                 ThrowError(expr._name, "This must be an IClass.");
-                return null!;
+                return null;
             }
             if (((IClass)obj).properties.ContainsKey(expr._name._lexeme))
             {
                 if (obj is Lists) lastList = (Lists)obj;
-                else lastList = null!;
+                else lastList = null;
                 if (obj is Card) lastCard = (Card)obj;
-                else lastCard = null!;
+                else lastCard = null;
                 return ((IClass)obj).properties[expr._name._lexeme];
             }
             ThrowError(expr._name, "This is not a property or a method.");
-            return null!;
+            return null;
         }
 
         public object VisitSetExpr(Set<object> expr)
         {
             object obj = Evaluate(expr._obj);
-            if (lastCard == null!)
+            if (lastCard == null)
             {
                 ThrowError(expr._name, "Arithmetic operations can only be aplaied to 'Card'.");
-                return null!;
+                return null;
             }
             Card auxCard = lastCard;
             if (!auxCard.properties.ContainsKey(expr._name._lexeme))
             {
                 ThrowError(expr._name, "This is not a property or a method.");
-                return null!;
+                return null;
             }
-            object value = null!;
+            object value = null;
             TokenType type = OperConverter(expr._oper._type);
             Token token = expr._oper;
             token._type = type;
             if (type == TokenType.EQUAL) value = Evaluate(expr._value);
-            else if (type != expr._oper._type) value = null!;
+            else if (type != expr._oper._type) value = null;
             else value = Evaluate(new Binary<object>(new Literal<object>(obj), token, new Literal<object>(Evaluate(expr._value))));
             auxCard.Set(expr._name._lexeme, value);
-            return null!;
+            return null;
         }
 
         public object VisitExpressionStmt(Expression<object> stmt)
@@ -561,7 +564,7 @@ namespace Odin
 
         public object VisitVarStmt(Var<object> stmt)
         {
-            object value = null!;
+            object value = null;
             if (stmt._initializer == null)
             {
                 environment.Define(stmt._name._lexeme, value);
@@ -571,7 +574,7 @@ namespace Odin
             Token token = stmt._type;
             token._type = type;
             if (type == TokenType.EQUAL) value = Evaluate(stmt._initializer);
-            else if (type != stmt._type._type) value = null!;
+            else if (type != stmt._type._type) value = null;
             else value = Evaluate(new Binary<object>(new Variable<object>(stmt._name), token, stmt._initializer));
             environment.Define(stmt._name._lexeme, value);
             return value;
@@ -582,11 +585,11 @@ namespace Odin
         public object VisitPostOperExpr(PostOper<object> postOper)
         {
             object value = Evaluate(postOper._var);
-            Card auxCard = lastCard!;
+            Card auxCard = lastCard;
             if (!(value is long))
             {
                 ThrowError(postOper._type, $"The object must contain an integer value.");
-                return null!;
+                return null;
             }
             long Value = (long)value;
             if (postOper._type._type == TokenType.PLUS_PLUS) Value++;
@@ -594,10 +597,10 @@ namespace Odin
             if (postOper._var is Variable<object>) environment.Define(((Variable<object>)postOper._var)._name._lexeme, Value);
             else
             {
-                if (auxCard == null!)
+                if (auxCard == null)
                 {
                     ThrowError(postOper._type, "The operation can only be aplied to integer variables and Card properties.");
-                    return null!;
+                    return null;
                 }
                 auxCard.Set(((Get<object>)postOper._var)._name._lexeme, Value);
             }
@@ -607,11 +610,11 @@ namespace Odin
         public object VisitPreOperExpr(PreOper<object> preOper)
         {
             object value = Evaluate(preOper._var);
-            Card auxCard = lastCard!;
+            Card auxCard = lastCard;
             if (!(value is long))
             {
                 ThrowError(preOper._type, $"The object must contain an integer value.");
-                return null!;
+                return null;
             }
             long Value = (long)value;
             if (preOper._type._type == TokenType.PLUS_PLUS) Value++;
@@ -619,10 +622,10 @@ namespace Odin
             if (preOper._var is Variable<object>) environment.Define(((Variable<object>)preOper._var)._name._lexeme, Value);
             else
             {
-                if (auxCard == null!)
+                if (auxCard == null)
                 {
                     ThrowError(preOper._type, "The operation can only be aplied to integer variables and Card properties.");
-                    return null!;
+                    return null;
                 }
                 auxCard.Set(((Get<object>)preOper._var)._name._lexeme, Value);
             }
@@ -632,7 +635,7 @@ namespace Odin
         public object VisitBlockStmt(Block<object> stmt)
         {
             ExecuteBlock(stmt._statements, new Environment(environment));
-            return null!;
+            return null;
         }
 
         public object VisitWhileStmt(While<object> stmt)
@@ -641,7 +644,7 @@ namespace Odin
             {
                 Execute(stmt._body);
             }
-            return null!;
+            return null;
         }
 
         public object VisitForStmt(For<object> stmt)
@@ -650,7 +653,7 @@ namespace Odin
             if (!(list is Lists))
             {
                 ThrowError(stmt._iter, "Expected list for this iterator.");
-                return null!;
+                return null;
             }
             foreach (var item in ((Lists)list).Cards)
             {
@@ -659,7 +662,7 @@ namespace Odin
                 Execute(stmt._body);
                 environment = previous;
             }
-            return null!;
+            return null;
         }
 
         internal void DoActionEffect(Token effect, string nameEffect, Dictionary<string, object> paramsEffect, Lists targets)

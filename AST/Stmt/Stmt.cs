@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Odin
 {
-    public interface IClass
+    internal abstract class Stmt<T>
     {
-        public Dictionary<string, object> properties { get; set; }
+        internal abstract T Accept(IVisitor<T> visitor);
     }
 }
