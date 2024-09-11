@@ -1,0 +1,31 @@
+//RETURN
+effect {
+    Name: "Return",
+    Action: (targets, context) => {
+        for target in targets {
+            owner = target.Owner;
+            deck = context.DeckOfPlayer(owner);
+            deck.Push(target);
+            deck.Shuffle();
+            context.FieldOfPlayer(owner).Remove(target);
+            context.FieldOfPlayer(owner % 2 + 1).Remove(target);
+        };
+    }
+}
+card {
+    Type: "Oro",
+    Name: "Juancho",
+    Faction: "Rick"@@"Sanchez",
+    Power: 10,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "Return",
+            Selector: {
+                Source: "board",
+                Single: false,
+                Predicate: (unit) => true//50
+            }
+        }
+    ]
+}

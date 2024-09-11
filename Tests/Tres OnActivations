@@ -1,0 +1,82 @@
+//THE CODE
+effect {
+    Name: "Draw",
+    Action: (targets, context) => {
+        context.Hand.Push(context.DeckOfPlayer(context.TriggerPlayer).Pop());
+        context.Hand.Shuffle();
+    }
+}
+effect {
+    Name: "Return",
+    Action: (targets, context) => {
+        for target in targets {
+            owner = target.Owner;
+            deck = context.DeckOfPlayer(owner);
+            deck.Push(target);
+            deck.Shuffle();
+            context.FieldOfPlayer(owner).Remove(target);
+            context.FieldOfPlayer(owner % 2 + 1).Remove(target);
+        };
+    }
+}
+effect {
+    Name: "ReturnToDeckAll",
+    Params: {
+        Amount: Number,
+        Cadena: String,
+        Buleano: Bool
+    },
+    Action: (targets, context) => {
+        targets.Shuffle();
+        targets.Shuffle();
+        for target in targets {
+            band=Buleano^true;
+            while(Amount>0 && band){
+                target.Name@@=Cadena;
+                owner = target.Owner;
+                deck = context.DeckOfPlayer(owner);
+                deck.Push(target);
+                deck.Shuffle();
+                context.FieldOfPlayer(owner).Remove(target);
+                context.FieldOfPlayer(owner % 2 + 1).Remove(target);
+                Amount--;
+                band=false;
+            };
+        };
+    }
+}
+card {
+    Type: "Oro",
+    Name: "Juancho",
+    Faction: "Rick"@@"Sanchez",
+    Power: 10,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "Draw"
+        },
+        {
+            Effect: {
+                Name: "Return"
+            },
+            Selector: {
+                Source: "board",
+                Single: true,
+                Predicate: (unit) => true//50
+            }
+        },
+        {
+            Effect: {
+                Name: "ReturnToDeckAll",
+                Amount: log(2,1),
+                Cadena: "LO"@"OO"@@"OOO"@@"OO"@"OL",
+                Buleano: false
+            },
+            Selector: {
+                Source: "board",
+                Single: false,
+                Predicate: (unit) => true//50
+            }
+        }
+    ]
+}

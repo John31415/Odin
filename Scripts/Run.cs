@@ -30,6 +30,7 @@ namespace Odin
 
             Parser<object> parser = new Parser<object>(tokens);
             List<Class<object>> classes = parser.Parse();
+            WriteLine("\n\nf\n\n");
 
             Interpreter interpreter = new Interpreter();
             Dictionary<Card, Method<object>> pairs = interpreter.CreateCards(classes);

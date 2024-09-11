@@ -1,0 +1,66 @@
+//THE CODE
+effect {
+    Name: "Damage",
+    Params: {
+        Amount: Number
+    },
+    Action: (targets, context) => {
+        for target in targets {
+            i = 0;
+            while (i++ < Amount)//10
+                target.Power -= 1;
+        };
+    }
+}
+effect {
+    Name: "Draw",
+    Action: (targets, context) => {
+        topCard = context.Deck.Pop();
+        context.Hand.Push(topCard);
+        context.Hand.Shuffle();//20
+    }
+}
+effect {
+    Name: "ReturnToDeck",
+    Action: (targets, context) => {
+        for target in targets {
+            owner = target.Owner;
+            deck = context.DeckOfPlayer(owner);
+            deck.Push(target);
+            deck.Shuffle();//30
+            context.Board.Remove(target);
+            context.FieldOfPlayer(owner).Remove(target);
+        };
+    }
+}
+card {
+    Type: "Oro",
+    Name: "Hormigas en los ojos Johnson",
+    Faction: "Morty"@@"Smith",
+    Power: 10,
+    Range: ["Melee", "Ranged"],//40
+    OnActivation: [
+        {
+            Effect: {
+                Name: "Damage",
+                Amount: 10
+            },
+            Selector: {
+                Source: "board",
+                Single: false,
+                Predicate: (unit) => unit.Faction == "Rick Sanchez"//50
+            },
+            PostAction: {
+                Effect: "ReturnToDeck",
+                Selector: {
+                    Source: "parent",
+                    Single: false,
+                    Predicate: (unit) => unit.Power < 1
+                }
+            }
+        },//60
+        {
+            Effect: "Draw"
+        }
+    ]
+}

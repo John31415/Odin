@@ -1,0 +1,37 @@
+//THE CODE
+effect {
+    Name: "Simple",
+    Params: {
+        Amount: Number
+    },
+    Action: (targets, context) => {
+        for target in targets {
+            i = 0;
+            while (i++ < Amount)//10
+                target.Power -= 1;
+        };
+        player = context.TriggerPlayer;
+        player = player % 2 + 1;
+        context.HandOfPlayer(player).Shuffle();
+    }
+}
+card {
+    Type: "Oro",
+    Name: "Juancho",
+    Faction: "Rick"@@"Sanchez",
+    Power: 10,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: {
+                Name: "Simple",
+                Amount: 1
+            },
+            Selector: {
+                Source: "board",
+                Single: false,
+                Predicate: (unit) => unit.Faction == "Morty"@@"Smith"//50
+            }
+        }
+    ]
+}

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static System.Console;
 
 namespace Odin
 {
@@ -57,6 +58,7 @@ namespace Odin
             {
                 Execute(effect);
             }
+            Execute(OnActivation);
         }
 
         private object Execute(Class<object> klass) => klass.Accept(this);
@@ -80,7 +82,11 @@ namespace Odin
         public object VisitEffectClassClass(EffectClass<object> effectClass)
         {
             object name = Execute(effectClass._name);
-            object _params = Execute(effectClass._params);
+            object _params = new Dictionary<string, TokenType>();
+            if (effectClass._params != null)
+            {
+                _params = Execute(effectClass._params);
+            }
             effectFun[(string)name] = ((Dictionary<string, TokenType>, Method<object>))(_params, effectClass._action);
             return null;
         }
@@ -99,8 +105,15 @@ namespace Odin
             object effect = Execute(onActBody._effect);
             Token effectToken;
             string nameEffect;
-            Dictionary<string, object> paramsEffect;
-            (effectToken, nameEffect, paramsEffect) = ((Token, string, Dictionary<string, object>))effect;
+            Dictionary<string, object> paramsEffect = new Dictionary<string, object>();
+            if(effect is (Token, string))
+            {
+                (effectToken, nameEffect) = ((Token, string))effect;
+            }
+            else
+            {
+                (effectToken, nameEffect, paramsEffect) = ((Token, string, Dictionary<string, object>))effect;
+            }
             object selector, postAction;
             if(onActBody._selector != null)
             {
@@ -124,7 +137,7 @@ namespace Odin
             Dictionary<string, object> _params = new Dictionary<string, object>();
             if(effect._exprName != null)
             {
-                return ((string)Evaluate(effect._exprName), _params);
+                return (effect._effect, (string)Evaluate(effect._exprName));
             }
             object name = Execute(effect._name);
             foreach(var _param in effect._paramsv)

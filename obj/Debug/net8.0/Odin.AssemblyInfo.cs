@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Odin")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a2227b86a555501be1d94923d1b945d00e1f395d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c916b1796a711ee1681736aea81d6c78ce9e3f01")]
 [assembly: System.Reflection.AssemblyProductAttribute("Odin")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Odin")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

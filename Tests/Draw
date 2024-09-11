@@ -1,0 +1,21 @@
+//THE CODE
+effect {
+    Name: "Draw",
+    Action: (targets, context) => {
+        topCard = context.Deck.Pop();
+        context.Hand.Push(topCard);
+        context.Hand.Shuffle();
+    }
+}
+card {
+    Type: "Oro",
+    Name: "Juancho",
+    Faction: "Rick"@@"Sanchez",
+    Power: 10,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "Draw"
+        }
+    ]
+}

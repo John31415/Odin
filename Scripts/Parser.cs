@@ -30,7 +30,7 @@ namespace Odin
             }
             return classes;
         }
-        
+
         private Class<T> Class()
         {
             if (Check(TokenType.CLASS_CARD))
@@ -127,7 +127,7 @@ namespace Odin
             do
             {
                 stmts.Add(Declaration());
-            } while (!Match(TokenType.RIGHT_CURLY));
+            } while (!Match(TokenType.RIGHT_CURLY) && !IsAtEnd());
             return new Action<T>(targets, context, stmts);
         }
 
@@ -303,7 +303,7 @@ namespace Odin
             Expr<T> value = Expression();
             return new ParamValue<T>(name, value);
         }
-        
+
         private Stmt<T> Declaration()
         {
             if (Match(TokenType.IDENTIFIER))
@@ -336,7 +336,7 @@ namespace Odin
                 return new Var<T>(name, oper, new Literal<T>(null));
             }
             Expr<T> initializer = Expression();
-            Consume(TokenType.SEMICOLON, "Expected ';' after variable assignation.");
+            if (!Consume(TokenType.SEMICOLON, "Expected ';' after variable assignation.")) return null;
             return new Var<T>(name, oper, initializer);
         }
 
@@ -347,7 +347,7 @@ namespace Odin
             {
                 return expr;
             }
-            if(!(expr is Get<T>) && !(expr is Variable<T>))
+            if (!(expr is Get<T>) && !(expr is Variable<T>))
             {
                 ThrowError(Peek(), "Invalid operation.");
                 return null;
@@ -363,7 +363,7 @@ namespace Odin
                 return null;
             }
             Expr<T> initializer = Expression();
-            Consume(TokenType.SEMICOLON, "Expected ';' after assignation.");
+            if (!Consume(TokenType.SEMICOLON, "Expected ';' after assignation.")) return null;
             return new Set<T>(expr, name, oper, initializer);
         }
 
@@ -401,15 +401,15 @@ namespace Odin
             {
                 statements.Add(Declaration());
             }
-            Consume(TokenType.RIGHT_CURLY, "Expected '}' after block.");
-            Consume(TokenType.SEMICOLON, "Expected ';'.");
+            if (!Consume(TokenType.RIGHT_CURLY, "Expected '}' after block.")) return null;
+            if (!Consume(TokenType.SEMICOLON, "Expected ';'.")) return null;
             return statements;
         }
 
         private Stmt<T> ExpressionStatement()
         {
             Expr<T> expr = Expression();
-            Consume(TokenType.SEMICOLON, "Expected ';' after expression.");
+            if (!Consume(TokenType.SEMICOLON, "Expected ';' after expression.")) return null;
             return new Expression<T>(expr);
         }
 
@@ -554,7 +554,7 @@ namespace Odin
             List<TokenType> opers = new List<TokenType> { TokenType.PLUS_PLUS, TokenType.MINUS_MINUS };
             if (Match(opers))
             {
-                if(expr is Call<T>)
+                if (expr is Call<T>)
                 {
                     ThrowError(((Call<T>)expr)._paren, "This operation can't be aplaied to methods.");
                     return null;
@@ -607,7 +607,7 @@ namespace Odin
             if (Match(TokenType.LEFT_PAREN))
             {
                 Expr<T> expr = Expression();
-                Consume(TokenType.RIGHT_PAREN, "Expected ')' after expression.");
+                if (!Consume(TokenType.RIGHT_PAREN, "Expected ')' after expression.")) return null;
                 return new Grouping<T>(expr);
             }
             operators = new List<TokenType> { TokenType.PLUS_PLUS, TokenType.MINUS_MINUS };
@@ -616,7 +616,8 @@ namespace Odin
                 return PreOper();
             }
             ThrowError(Peek(), "Expected expression.");
-            return new Literal<T>(null);
+            Synchronize();
+            return null;
         }
 
         private Expr<T> PostOper(Token var)
@@ -634,7 +635,7 @@ namespace Odin
             {
                 _current--;
                 Expr<T> expr = Call();
-                if(!(expr is Get<T>))
+                if (!(expr is Get<T>))
                 {
                     ThrowError(oper, "Operation can only be aplaied to integer variables and Card properties.");
                     return null;
