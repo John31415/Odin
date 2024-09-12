@@ -1,21 +1,19 @@
 //THE CODE
-
 effect {
-    Name: "Draw",
+    Name: "Mezcla",
     Action: (targets, context) => {
-        topCard = context.Deck.Pop();
-        context.Hand.Push(topCard);
+        context.FieldOfPlayer(context.TriggerPlayer%2+1).Shuffle();
     }
 }
 card {
     Type: "Plata",
-    Name: "Juancho",
+    Name: "Jessica",
     Faction: "Rick"@@"Sanchez",
     Power: 10,
     Range: ["Melee"],//40
     OnActivation: [
         {
-            Effect: "Draw"
+            Effect: "Mezcla"
         }
     ]
 }

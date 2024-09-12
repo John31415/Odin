@@ -106,7 +106,7 @@ namespace Odin
             Token effectToken;
             string nameEffect;
             Dictionary<string, object> paramsEffect = new Dictionary<string, object>();
-            if(effect is (Token, string))
+            if(effect is ValueTuple<Token, string>)
             {
                 (effectToken, nameEffect) = ((Token, string))effect;
             }
