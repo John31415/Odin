@@ -1,109 +1,4 @@
 //THE CODE
-
-effect {
-    Name: "Draw",
-    Action: (targets, context) => {
-        topCard = context.Deck.Pop();
-        context.Hand.Push(topCard);
-    }
-}
-card {
-    Type: "Plata",
-    Name: "Juancho",
-    Faction: "Rick"@@"Sanchez",
-    Power: 10,
-    Range: ["Melee"],//40
-    OnActivation: [
-        {
-            Effect: "Draw"
-        }
-    ]
-}
-//THE CODE
-
-effect {
-    Name: "Draw",
-    Action: (targets, context) => {
-        topCard = context.Deck.Pop();
-        context.Hand.Push(topCard);
-    }
-}
-card {
-    Type: "Plata",
-    Name: "Juancho",
-    Faction: "Rick"@@"Sanchez",
-    Power: 10,
-    Range: ["Melee"],//40
-    OnActivation: [
-        {
-            Effect: "Draw"
-        }
-    ]
-}
-//THE CODE
-
-effect {
-    Name: "Draw",
-    Action: (targets, context) => {
-        topCard = context.Deck.Pop();
-        context.Hand.Push(topCard);
-    }
-}
-card {
-    Type: "Plata",
-    Name: "Juancho",
-    Faction: "Rick"@@"Sanchez",
-    Power: 10,
-    Range: ["Melee"],//40
-    OnActivation: [
-        {
-            Effect: "Draw"
-        }
-    ]
-}
-//THE CODE
-
-effect {
-    Name: "Draw",
-    Action: (targets, context) => {
-        topCard = context.Deck.Pop();
-        context.Hand.Push(topCard);
-    }
-}
-card {
-    Type: "Plata",
-    Name: "Juancho",
-    Faction: "Rick"@@"Sanchez",
-    Power: 10,
-    Range: ["Melee"],//40
-    OnActivation: [
-        {
-            Effect: "Draw"
-        }
-    ]
-}
-//THE CODE
-
-effect {
-    Name: "Draw",
-    Action: (targets, context) => {
-        topCard = context.Deck.Pop();
-        context.Hand.Push(topCard);
-    }
-}
-card {
-    Type: "Plata",
-    Name: "Juancho",
-    Faction: "Rick"@@"Sanchez",
-    Power: 10,
-    Range: ["Melee"],//40
-    OnActivation: [
-        {
-            Effect: "Draw"
-        }
-    ]
-}
-//THE CODE
 effect {
     Name: "Damage",
     Params: {
@@ -138,8 +33,8 @@ effect {
 }
 card {
     Type: "Oro",
-    Name: "Hormigas en los ojos Johnson",
-    Faction: "Morty"@@"Smith",
+    Name: "Hormigas en los ojos Johson",
+    Faction: "Rick"@@"Sanchez",
     Power: 10,
     Range: ["Melee", "Ranged"],//40
     OnActivation: [
@@ -151,7 +46,7 @@ card {
             Selector: {
                 Source: "board",
                 Single: false,
-                Predicate: (unit) => unit.Faction == "Rick Sanchez"//50
+                Predicate: (unit) => unit.Faction == "Morty Smith"//50
             },
             PostAction: {
                 Effect: "ReturnToDeck",
@@ -168,19 +63,7 @@ card {
     ]
 }
 //THE CODE
-effect {
-    Name: "Damage",
-    Params: {
-        Amount: Number
-    },
-    Action: (targets, context) => {
-        for target in targets {
-            i = 0;
-            while (i++ < Amount)//10
-                target.Power -= 1;
-        };
-    }
-}
+
 effect {
     Name: "Draw",
     Action: (targets, context) => {
@@ -188,44 +71,76 @@ effect {
         context.Hand.Push(topCard);
     }
 }
+card {
+    Type: "Plata",
+    Name: "Juancho",
+    Faction: "Morty"@@"Smith",
+    Power: 10,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "Draw"
+        }
+    ]
+}
+//THE CODE
+
 effect {
-    Name: "ReturnToDeck",
+    Name: "Draw",
     Action: (targets, context) => {
-        for target in targets {
-            owner = target.Owner;
-            deck = context.DeckOfPlayer(owner);
-            deck.Push(target);
-            context.Board.Remove(target);
-            context.FieldOfPlayer(owner).Remove(target);
-        };
+        topCard = context.Deck.Pop();
+        context.Hand.Push(topCard);
     }
 }
 card {
-    Type: "Oro",
-    Name: "Hormigas en los ojos Johnson",
+    Type: "Plata",
+    Name: "Juancho",
     Faction: "Morty"@@"Smith",
     Power: 10,
-    Range: ["Melee", "Ranged"],//40
+    Range: ["Melee"],//40
     OnActivation: [
         {
-            Effect: {
-                Name: "Damage",
-                Amount: 5
-            },
-            Selector: {
-                Source: "board",
-                Single: false,
-                Predicate: (unit) => unit.Faction == "Rick Sanchez"//50
-            },
-            PostAction: {
-                Effect: "ReturnToDeck",
-                Selector: {
-                    Source: "parent",
-                    Single: false,
-                    Predicate: (unit) => unit.Power < 1
-                }
-            }
-        },//60
+            Effect: "Draw"
+        }
+    ]
+}
+//THE CODE
+
+effect {
+    Name: "Draw",
+    Action: (targets, context) => {
+        topCard = context.Deck.Pop();
+        context.Hand.Push(topCard);
+    }
+}
+card {
+    Type: "Plata",
+    Name: "Juancho",
+    Faction: "Morty"@@"Smith",
+    Power: 10,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "Draw"
+        }
+    ]
+}
+//THE CODE
+
+effect {
+    Name: "Draw",
+    Action: (targets, context) => {
+        topCard = context.Deck.Pop();
+        context.Hand.Push(topCard);
+    }
+}
+card {
+    Type: "Plata",
+    Name: "Juancho",
+    Faction: "Morty"@@"Smith",
+    Power: 10,
+    Range: ["Melee"],//40
+    OnActivation: [
         {
             Effect: "Draw"
         }

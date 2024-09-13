@@ -33,7 +33,7 @@ effect {
 }
 card {
     Type: "Oro",
-    Name: "Hormigas en los ojos Johnson",
+    Name: "Hormigas en los ojos Johson",
     Faction: "Rick"@@"Sanchez",
     Power: 10,
     Range: ["Melee", "Ranged"],//40
@@ -57,6 +57,27 @@ card {
                 }
             }
         },//60
+        {
+            Effect: "Draw"
+        }
+    ]
+}
+//THE CODE
+
+effect {
+    Name: "Draw",
+    Action: (targets, context) => {
+        topCard = context.Deck.Pop();
+        context.Hand.Push(topCard);
+    }
+}
+card {
+    Type: "Plata",
+    Name: "Juancho",
+    Faction: "Morty"@@"Smith",
+    Power: 10,
+    Range: ["Melee"],//40
+    OnActivation: [
         {
             Effect: "Draw"
         }

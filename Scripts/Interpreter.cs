@@ -21,6 +21,8 @@ namespace Odin
             environment = globals;
             globals.Define("rand", new Rand());
             globals.Define("log", new Log());
+            globals.Define("max", new Max());
+            globals.Define("min", new Min());
             parentTargets = null;
         }
 
@@ -30,6 +32,8 @@ namespace Odin
             environment = globals;
             globals.Define("rand", new Rand());
             globals.Define("log", new Log());
+            globals.Define("max", new Max());
+            globals.Define("min", new Min());
             parentTargets = null;
         }
 

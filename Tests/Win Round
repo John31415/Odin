@@ -4,13 +4,16 @@ effect {
     Name: "Win",
     Action: (targets, context) => {
         otherPlayer = context.TriggerPlayer % 2 + 1;
-        val = 100;
-        while(val--){
-            graveyard = context.GraveyardOfPlayer(otherPlayer);
-            carta = context.FieldOfPlayer(otherPlayer).Pop();
-            graveyard.Push(carta);
-            carta = context.HandOfPlayer(otherPlayer).Pop();
-            graveyard.Push(carta);
+        graveyard = context.GraveyardOfPlayer(otherPlayer);
+        for target in context.FieldOfPlayer(otherPlayer){
+            graveyard.Push(target);
+        };
+        for target in context.HandOfPlayer(otherPlayer){
+            graveyard.Push(target);
+        };
+        for target in graveyard{
+            context.FieldOfPlayer(otherPlayer).Remove(target);
+            context.HandOfPlayer(otherPlayer).Remove(target);
         };
     }
 }

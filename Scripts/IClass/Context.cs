@@ -23,7 +23,9 @@ namespace Odin
             properties["OtherHand"] = gameState.OtherHand;
             properties["Field"] = gameState.Field;
             properties["OtherField"] = gameState.OtherField;
+            properties["Graveyard"] = gameState.Graveyard;
             properties["OtherGraveyard"] = gameState.OtherGraveyard;
+            properties["Deck"] = gameState.Deck;
             properties["OtherDeck"] = gameState.OtherDeck;
         }
     }

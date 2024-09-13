@@ -1,0 +1,28 @@
+//THE CODE
+
+effect {
+    Name: "Senuelo",
+    Action: (TARGETS, CONTEXT) => {
+        //retorna carta tipo oro con mayor poder
+        maxPower = -1;
+        for target in CONTEXT.Field.Find((CARTA) => CARTA.Type == "Oro"){
+            maxPower=max(maxPower,target.Power);
+        };
+        carta = CONTEXT.Field.Find((CARTA) => CARTA.Type == "Oro" && CARTA.Power == maxPower)[0];
+        CONTEXT.Field.Remove(carta);
+        CONTEXT.Hand.Push(carta);
+    }
+}
+
+card {
+    Type: "Senuelito",
+    Name: "Juancho4",
+    Faction: "Rick"@@"Sanchez",
+    Power: 0,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "Senuelo"
+        }
+    ]
+}

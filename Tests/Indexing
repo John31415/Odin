@@ -1,9 +1,9 @@
 //THE CODE
 
 effect {
-    Name: "ToPaM",
+    Name: "ToPaMi",
     Action: (targets, context) => {
-        
+        context.bread();
     }
 }
 card {

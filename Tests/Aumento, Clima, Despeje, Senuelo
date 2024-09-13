@@ -1,0 +1,105 @@
+//THE CODE
+effect {
+    Name: "Aumento",
+    Action: (targets, context) => {
+        for target in targets{
+            target.Power++;
+        };
+    }
+}
+effect {
+    Name: "Clima",
+    Action: (targets, context) => {
+        for target in targets{
+            target.Power--;
+        };
+    }
+}
+effect {
+    Name: "Despeje",
+    Action: (targets, context) => {
+        clima = targets.Find((carta) => carta.Type == "Clima")[0];
+        for target in targets.Find((carta) => carta.Type == "Plata"){
+            target.Power++;
+        };
+        context.Field.Remove(clima);
+        context.OtherField.Remove(clima);
+    }
+}
+effect {
+    Name: "Senuelo",
+    Action: (TARGETS, CONTEXT) => {
+        //retorna carta tipo oro con mayor poder
+        maxPower = -1;
+        for target in CONTEXT.Field.Find((CARTA) => CARTA.Type == "Oro"){
+            maxPower=max(maxPower,target.Power);
+        };
+        carta = CONTEXT.Field.Find((CARTA) => CARTA.Type == "Oro" && CARTA.Power == maxPower)[0];
+        CONTEXT.Field.Remove(carta);
+        CONTEXT.Hand.Push(carta);
+    }
+}
+
+card {
+    Type: "Aumento",
+    Name: "Juancho1",
+    Faction: "Rick"@@"Sanchez",
+    Power: 0,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "Aumento",
+            Selector:{
+                Source: "field",
+                Single: false,
+                Predicate: (carta) => carta.Type == "Plata" && carta.Range == "M"
+            }
+        }
+    ]
+}
+card {
+    Type: "Clima",
+    Name: "Juancho2",
+    Faction: "Rick"@@"Sanchez",
+    Power: 0,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "Clima",
+            Selector:{
+                Source: "board",
+                Single: false,
+                Predicate: (carta) => carta.Type == "Plata" && carta.Range == "M"
+            }
+        }
+    ]
+}
+card {
+    Type: "Despeje",
+    Name: "Juancho3",
+    Faction: "Rick"@@"Sanchez",
+    Power: 0,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "Despeje",
+            Selector:{
+                Source: "board",
+                Single: false,
+                Predicate: (carta) => carta.Range == "M" && (carta.Type == "Plata" || carta.Type == "Clima") 
+            }
+        }
+    ]
+}
+card {
+    Type: "Senuelito",
+    Name: "Juancho4",
+    Faction: "Rick"@@"Sanchez",
+    Power: 0,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "Senuelo"
+        }
+    ]
+}
