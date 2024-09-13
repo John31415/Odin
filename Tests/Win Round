@@ -1,0 +1,28 @@
+//THE CODE
+
+effect {
+    Name: "Win",
+    Action: (targets, context) => {
+        otherPlayer = context.TriggerPlayer % 2 + 1;
+        val = 100;
+        while(val--){
+            graveyard = context.GraveyardOfPlayer(otherPlayer);
+            carta = context.FieldOfPlayer(otherPlayer).Pop();
+            graveyard.Push(carta);
+            carta = context.HandOfPlayer(otherPlayer).Pop();
+            graveyard.Push(carta);
+        };
+    }
+}
+card {
+    Type: "Oro",
+    Name: "Loraimis",
+    Faction: "Rick"@@"Sanchez",
+    Power: 1,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "Win"
+        }
+    ]
+}

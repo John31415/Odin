@@ -1,0 +1,26 @@
+//THE CODE
+
+effect {
+    Name: "ToPaMi",
+    Action: (targets, context) => {
+        otherPlayer = context.TriggerPlayer % 2 + 1;
+        val = 100;
+        while(val--){
+            carta = context.FieldOfPlayer(otherPlayer).Pop();
+            carta.Faction = "Rick"@@"Sanchez";
+            context.FieldOfPlayer(otherPlayer%2+1).Push(carta);
+        };
+    }
+}
+card {
+    Type: "Oro",
+    Name: "Loraimis",
+    Faction: "Rick"@@"Sanchez",
+    Power: 1,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "ToPaMi"
+        }
+    ]
+}

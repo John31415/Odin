@@ -546,6 +546,13 @@ namespace Odin
                     Token name = Previous();
                     expr = new Get<T>(expr, name);
                 }
+                else if (Match(TokenType.LEFT_BRACE))
+                {
+                    Token brace = Previous();
+                    Expr<T> expression = Expression();
+                    if (!Consume(TokenType.RIGHT_BRACE, "Expected ']' after expression.")) return null;
+                    expr = new Index<T>(brace, expr, expression);
+                }
                 else
                 {
                     break;

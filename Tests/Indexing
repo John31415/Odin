@@ -1,0 +1,22 @@
+//THE CODE
+
+effect {
+    Name: "ToPaMi",
+    Action: (targets, context) => {
+        otherPlayer = context.TriggerPlayer % 2 + 1;
+        carta = context.FieldOfPlayer(otherPlayer)[1];
+        context.FieldOfPlayer(otherPlayer).Remove(carta);
+    }
+}
+card {
+    Type: "Oro",
+    Name: "Loraimis",
+    Faction: "Rick"@@"Sanchez",
+    Power: 1,
+    Range: ["Melee"],//40
+    OnActivation: [
+        {
+            Effect: "ToPaMi"
+        }
+    ]
+}

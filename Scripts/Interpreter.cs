@@ -501,6 +501,28 @@ namespace Odin
             return null;
         }
 
+        public object VisitIndexExpr(Index<object> expr)
+        {
+            object list = Evaluate(expr._list);
+            if(!(list is Lists))
+            {
+                ThrowError(expr._brace, "Expected list before '['.");
+                return null;
+            }
+            object index = Evaluate(expr._expr);
+            if (!(index is long))
+            {
+                ThrowError(expr._brace, "Expected integer expression after '['");
+                return null;
+            }
+            if (((Lists)list).Cards.Count <= (long)index)
+            {
+                ThrowError(expr._brace, $"Cannot access position '{(long)index}' in a list of '{((Lists)list).Cards.Count}' elements.");
+                return null;
+            }
+            return ((Lists)list).Cards[Convert.ToInt32((long)index)];
+        }
+
         public object VisitCallExpr(Call<object> expr)
         {
             object callee = Evaluate(expr._callee);
