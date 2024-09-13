@@ -28,11 +28,17 @@ namespace Odin
             Scanner scanner = new Scanner(input);
             List<Token> tokens = scanner.ScanTokens();
 
+            if (Errors != "") return;
+
             Parser<object> parser = new Parser<object>(tokens);
             List<Class<object>> classes = parser.Parse();
 
+            if (Errors != "") return;
+
             Interpreter interpreter = new Interpreter();
             Dictionary<Card, Method<object>> pairs = interpreter.CreateCards(classes);
+
+            if (Errors != "") return;
 
             CardsCreated = new List<Card>();
             onActs = new Dictionary<string, Method<object>>();

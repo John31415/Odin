@@ -1,13 +1,9 @@
 //THE CODE
 
 effect {
-    Name: "ToPaMi",
+    Name: "ToPaM",
     Action: (targets, context) => {
-        iter = 0;
-        otherField = context.OtherField;
-        while(iter++<otherField.Count()-1){
-            otherField.Pop();
-        };
+        
     }
 }
 card {
