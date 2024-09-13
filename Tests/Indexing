@@ -3,9 +3,11 @@
 effect {
     Name: "ToPaMi",
     Action: (targets, context) => {
-        otherPlayer = context.TriggerPlayer % 2 + 1;
-        carta = context.FieldOfPlayer(otherPlayer)[1];
-        context.FieldOfPlayer(otherPlayer).Remove(carta);
+        iter = 0;
+        otherField = context.OtherField;
+        while(iter++<otherField.Count()-1){
+            otherField.Pop();
+        };
     }
 }
 card {

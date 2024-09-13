@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using static System.Console;
 
 namespace Odin
@@ -521,6 +522,29 @@ namespace Odin
                 return null;
             }
             return ((Lists)list).Cards[Convert.ToInt32((long)index)];
+        }
+
+        public object VisitFindExpr(Find<object> expr)
+        {
+            object list = Evaluate(expr._expr);
+            if (!(list is Lists))
+            {
+                ThrowError(expr._find, "Expected list before '('.");
+                return null;
+            }
+            List<Card> cards = new List<Card>();
+            foreach (var card in ((Lists)list).Cards)
+            {
+                Environment previous = environment;
+                environment.Define(expr._card._lexeme, card);
+                bool ok = IsTrue(Evaluate(expr._pred));
+                if (ok)
+                {
+                    cards.Add(card);
+                }
+                environment = previous;
+            }
+            return new Lists(cards);
         }
 
         public object VisitCallExpr(Call<object> expr)

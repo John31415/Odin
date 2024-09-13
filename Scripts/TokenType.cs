@@ -102,7 +102,7 @@ namespace Odin
         //DECK_OF_PLAYER, // DeckOfPlayer
         //DECK, // Deck
         //OWNER, // Owner
-        //FIND, // Find
+        FIND, // Find
         //PUSH, // Push
         //SEND_BOTTOM, // SendBottom
         //POP, // Pop

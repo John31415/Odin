@@ -13,11 +13,6 @@ namespace Odin
         public object Call(GameState gameState, Interpreter interpreter, List<object> arguments, Token token)
         {
             int length = ((Lists)arguments[0]).Cards.Count();
-            if (length == 0)
-            {
-                ErrorReporter.ThrowError("The list is empty.", token);
-                return null;
-            }
             for (int i = 0; i < length; i++)
             {
                 Random random = new Random();

@@ -10,6 +10,7 @@ namespace Odin
     internal interface IVisitor<T>
     {
         T VisitBinaryExpr(Binary<T> expr);
+        T VisitFindExpr(Find<T> expr);
         T VisitIndexExpr(Index<T> expr);
         T VisitCallExpr(Call<T> expr);
         T VisitGetExpr(Get<T> expr);

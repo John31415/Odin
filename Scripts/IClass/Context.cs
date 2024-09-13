@@ -20,9 +20,11 @@ namespace Odin
             properties["FieldOfPlayer"] = new FieldOfPlayer();
             properties["GraveyardOfPlayer"] = new GraveyardOfPlayer();
             properties["Hand"] = gameState.Hand;
+            properties["OtherHand"] = gameState.OtherHand;
             properties["Field"] = gameState.Field;
-            properties["Graveyard"] = gameState.Graveyard;
-            properties["Deck"] = gameState.Deck;
+            properties["OtherField"] = gameState.OtherField;
+            properties["OtherGraveyard"] = gameState.OtherGraveyard;
+            properties["OtherDeck"] = gameState.OtherDeck;
         }
     }
 }

@@ -542,6 +542,20 @@ namespace Odin
                 }
                 else if (Match(TokenType.DOT))
                 {
+                    if (Match(TokenType.FIND))
+                    {
+                        Token find = Previous();
+                        if (!Consume(TokenType.LEFT_PAREN, "Expected '(' after 'Find'.")) return null;
+                        if (!Consume(TokenType.LEFT_PAREN, "Expected '(' after '('.")) return null;
+                        if (!Consume(TokenType.IDENTIFIER, "Expected variable after '('.")) return null;
+                        Token card = Previous();
+                        if (!Consume(TokenType.RIGHT_PAREN, "Expected ')' after variable.")) return null;
+                        if (!Consume(TokenType.LAMBDA, "Expected \"=>\" in predicate.")) return null;
+                        Expr<T> expression = Expression();
+                        if (!Consume(TokenType.RIGHT_PAREN, "Expected ')' after variable.")) return null;
+                        expr = new Find<T>(find, expr, card, expression);
+                        continue;
+                    }
                     if (!Consume(TokenType.IDENTIFIER, "Expected property name after '.'.")) return null;
                     Token name = Previous();
                     expr = new Get<T>(expr, name);

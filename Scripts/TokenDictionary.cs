@@ -41,7 +41,7 @@ namespace Odin
             //Keywords["DeckOfPlayer"] = TokenType.DECK_OF_PLAYER;
             //Keywords["Field"] = TokenType.FIELD;
             //Keywords["FieldOfPlayer"] = TokenType.FIELD_OF_PLAYER;
-            //Keywords["Find"] = TokenType.FIND;
+            Keywords["Find"] = TokenType.FIND;
             //Keywords["Graveyard"] = TokenType.GRAVEYARD;
             //Keywords["GraveyardOfPlayer"] = TokenType.GRAVEYARD_OF_PLAYER;
             //Keywords["Hand"] = TokenType.HAND;
