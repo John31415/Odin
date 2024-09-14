@@ -7,6 +7,14 @@
       "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:scripts\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\scripts\\interpreter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:scripts\\interpreter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\scripts\\iclass\\context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:scripts\\iclass\\context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|d:\\odin\\github\\odin\\scripts\\run.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{78C50AFB-CFA7-4086-A2E1-C9AAB91CBE3C}|Odin.csproj|solutionrelative:scripts\\run.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -18,11 +26,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "Interpreter.cs",
+              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\Scripts\\Interpreter.cs",
+              "RelativeDocumentMoniker": "Scripts\\Interpreter.cs",
+              "ToolTip": "D:\\Odin\\GitHub\\Odin\\Scripts\\Interpreter.cs",
+              "RelativeToolTip": "Scripts\\Interpreter.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAwCMAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-13T21:47:33.4Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Context.cs",
+              "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\Scripts\\IClass\\Context.cs",
+              "RelativeDocumentMoniker": "Scripts\\IClass\\Context.cs",
+              "ToolTip": "D:\\Odin\\GitHub\\Odin\\Scripts\\IClass\\Context.cs",
+              "RelativeToolTip": "Scripts\\IClass\\Context.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABkAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-13T20:56:56.967Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Run.cs",
               "DocumentMoniker": "D:\\Odin\\GitHub\\Odin\\Scripts\\Run.cs",
               "RelativeDocumentMoniker": "Scripts\\Run.cs",
@@ -30,8 +64,7 @@
               "RelativeToolTip": "Scripts\\Run.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABUAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-13T17:04:55.95Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-13T17:04:55.95Z"
             },
             {
               "$type": "Bookmark",
@@ -45,7 +78,7 @@
               "RelativeDocumentMoniker": "Scripts\\Program.cs",
               "ToolTip": "D:\\Odin\\GitHub\\Odin\\Scripts\\Program.cs",
               "RelativeToolTip": "Scripts\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEUAAACYAQAAAAAAAA==",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAiwEYAAAATAwAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-10T05:54:03.437Z",
               "EditorCaption": ""
