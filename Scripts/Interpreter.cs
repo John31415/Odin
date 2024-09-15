@@ -266,6 +266,7 @@ namespace Odin
                     return null;
                 }
                 rangeStr += keyValuePairs[(string)value];
+                break;
             }
             return rangeStr;
         }

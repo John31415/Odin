@@ -1,0 +1,28 @@
+//THE CODE
+effect {
+    Name: "Promedio",
+    Action: (targets, context) => {
+        cant = 0;
+        sum = 0;
+        for target in context.OtherField{
+            sum += target.Power;
+            cant++;
+        };
+        prom = sum / cant;
+        for target in context.OtherField{
+            target.Power = prom;
+        };
+    }
+}
+card {
+    Type: "Oro",
+    Name: "Juancho",
+    Faction: "Rick"@@"Sanchez",
+    Power: 10,
+    Range: ["Melee"],
+    OnActivation: [
+        {
+            Effect: "Promedio"
+        }
+    ]
+}

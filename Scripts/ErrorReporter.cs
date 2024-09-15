@@ -45,12 +45,14 @@ namespace Odin
 
         internal static void ThrowError(string message, int line, int current, int lineBeginning)
         {
+            if (current >= Scanner.Source.Length) return;
             Error(line, current - lineBeginning - 1, ErrorLine(current, lineBeginning), message);
         }
 
         internal static void ThrowError(string message, Token token)
         {
             int line = token._line, current = token._position, lineBeginning = token._lineBeginning;
+            if (current >= Scanner.Source.Length) return;
             Error(line, current - lineBeginning - 1, ErrorLine(current, lineBeginning), message);
         }
     }

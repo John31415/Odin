@@ -1,0 +1,81 @@
+//THE CODE
+effect {//Elimina aumentos del rival y elimina Int de las unidades plata de la fila del aumento
+    Name: "QuitarAumentos",
+    Params:{
+        Int: Number
+    },
+    Action: (targets, context) => {
+        otherField = context.OtherField;
+        aumentos = otherField.Find((c) => c.Type == "Aumento");
+        for i in aumentos{
+            fila = targets.Find((c) => c.Range == i.Range);
+            for j in fila j.Power -= Int;
+            context.OtherGraveyard.Push(i);
+            otherField.Remove(i);
+        };
+    }
+}
+effect {
+    Name: "RIP",
+    Action: (muertos, v) => {
+        for m in muertos{
+            player = v.TriggerPlayer % 2 + 1;
+            v.FieldOfPlayer(player).Remove(m);
+            v.GraveyardOfPlayer(player).Push(m);
+        };
+    }
+}
+effect {
+    Name: "Kill",//Elimina cartas de la mano del rival hasta que su suma sea inferior a la de la mano del TriggerPlayer
+    Action: (T, C) => {
+        MisPuntos = 0;
+        for var in T MisPuntos += var.Power;
+        PuntosRival = 0;
+        for var in C.OtherHand PuntosRival += var.Power;
+        while(PuntosRival >= MisPuntos && MisPuntos){
+            otherHandLength = C.OtherHand.Count();
+            carta = C.OtherHand[rand(0, otherHandLength - 1)];
+            C.OtherHand.Remove(carta);
+            PuntosRival = 0;
+            for var in C.OtherHand PuntosRival += var.Power;
+        };
+    }
+}
+card {
+    Type: "Oro",
+    Name: "Juancho",
+    Faction: "Rick"@@"Sanchez",
+    Power: 10,
+    Range: ["Melee"],
+    OnActivation: [
+        {
+            Effect: {
+                Name: "QuitarAumentos",
+                Int: 2 
+            },
+            Selector: {
+                Source: "otherField",
+                Single: false,
+                Predicate: (carta) => carta.Type == "Plata"
+            },
+            PostAction: {
+                Effect: "RIP",
+                Selector: {
+                    Source: "parent",
+                    Single: false,
+                    Predicate: (ca) => ca.Power <= 0
+                }
+            }
+        },
+        {
+            Effect: {
+                Name: "Kill"
+            },
+            Selector: {
+                Source: "hand",
+                Single: false,
+                Predicate: (carta) => true
+            }
+        }
+    ]
+}

@@ -75,8 +75,8 @@ namespace Odin
             {
                 if (Peek() == '\n')
                 {
-                    line++;
-                    lineBeginning = current;
+                    ThrowError("Unterminated string.");
+                    return;
                 }
                 Advance();
             }
